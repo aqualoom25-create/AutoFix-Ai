@@ -1,0 +1,143 @@
+{
+  "vehicle": "Maruti Suzuki Alto 800 (2013, 0.8L F8D MPFI Petrol)",
+  "ecm_type": "Bosch ME17.9.71 / Delphi MT22.1 (60-Pin / 94-Pin Automotive Waterproof Connector)",
+  "dlc_16pin_pinout": {
+    "connector_name": "SAE J1962 16-Pin OBD-II Diagnostic Link Connector (DLC)",
+    "location": "Driver footwell upper right, adjacent to interior fuse block",
+    "pins": [
+      { "pin": 1, "function": "Unused / OEM Option", "wire_color": "-", "nominal_voltage": "0V" },
+      { "pin": 2, "function": "Unused (J1850 Bus+)", "wire_color": "-", "nominal_voltage": "-" },
+      { "pin": 3, "function": "Unused", "wire_color": "-", "nominal_voltage": "-" },
+      { "pin": 4, "function": "Chassis Ground (CGND)", "wire_color": "Black (B)", "nominal_voltage": "0.00V (< 0.2 Ω to battery negative)" },
+      { "pin": 5, "function": "Signal Ground (SGND)", "wire_color": "Black/Orange (B/O)", "nominal_voltage": "0.00 - 0.05V" },
+      { "pin": 6, "function": "CAN High (ISO 15765-4 500 kbps)", "wire_color": "White/Red (W/R)", "nominal_voltage": "2.5 - 3.5V (60 Ω across Pin 6 & 14 with battery disconnected)" },
+      { "pin": 7, "function": "ISO 9141-2 / ISO 14230-4 KWP2000 K-Line (ECM / Immobilizer / EPS)", "wire_color": "Purple/Yellow (P/Y)", "nominal_voltage": "11.5 - 12.5V idle (pulled high to +B), pulses 0V-12V during comms" },
+      { "pin": 8, "function": "Unused", "wire_color": "-", "nominal_voltage": "-" },
+      { "pin": 9, "function": "EPS / ABS Diagnostic Line (Variant Dependent)", "wire_color": "Green (G)", "nominal_voltage": "12V idle" },
+      { "pin": 10, "function": "Unused", "wire_color": "-", "nominal_voltage": "-" },
+      { "pin": 11, "function": "Unused", "wire_color": "-", "nominal_voltage": "-" },
+      { "pin": 12, "function": "Unused", "wire_color": "-", "nominal_voltage": "-" },
+      { "pin": 13, "function": "Unused", "wire_color": "-", "nominal_voltage": "-" },
+      { "pin": 14, "function": "CAN Low (ISO 15765-4 500 kbps)", "wire_color": "White (W)", "nominal_voltage": "1.5 - 2.5V (60 Ω across Pin 6 & 14)" },
+      { "pin": 15, "function": "ISO L-Line (Unpopulated on most 2013 units)", "wire_color": "-", "nominal_voltage": "-" },
+      { "pin": 16, "function": "Battery Positive (+12V Always ON via 10A Fuse)", "wire_color": "White/Black (W/B)", "nominal_voltage": "12.4 - 14.4V" }
+    ]
+  },
+  "circuits": {
+    "MAP_IAT_SENSOR": {
+      "id": "MAP_IAT_SENSOR",
+      "name": "4-Pin Integrated MAP & IAT Sensor Circuit",
+      "mgp_part": "18590-68K00",
+      "location": "Top center of intake manifold plenum chamber",
+      "pins": [
+        { "sensor_pin": 1, "ecm_pin": "C40", "signal": "IAT Signal (NTC Thermistor)", "wire_color": "Light Green/Black (Lg/B)", "expected_koeo_v": "1.8 - 2.8 V (at 25-35°C)", "expected_idle_v": "1.4 - 2.4 V" },
+        { "sensor_pin": 2, "ecm_pin": "C19", "signal": "Sensor Ground (E2)", "wire_color": "Brown/White (Br/W)", "expected_koeo_v": "0.00 - 0.05 V", "expected_idle_v": "0.00 - 0.05 V" },
+        { "sensor_pin": 3, "ecm_pin": "C32", "signal": "5V Regulated Reference (VCC)", "wire_color": "Red/Blue (R/Bl)", "expected_koeo_v": "4.85 - 5.15 V", "expected_idle_v": "4.85 - 5.15 V" },
+        { "sensor_pin": 4, "ecm_pin": "C44", "signal": "MAP Pressure Output Signal", "wire_color": "Light Green/Red (Lg/R)", "expected_koeo_v": "3.85 - 4.25 V (~101 kPa)", "expected_idle_v": "1.15 - 1.55 V (~30-35 kPa)" }
+      ],
+      "multimeter_validation_rules": {
+        "ref_voltage_min": 4.8,
+        "ref_voltage_max": 5.2,
+        "idle_signal_min": 1.0,
+        "idle_signal_max": 1.7,
+        "koeo_signal_min": 3.7,
+        "koeo_signal_max": 4.4,
+        "ground_max_drop": 0.08
+      }
+    },
+    "ECT_SENSOR": {
+      "id": "ECT_SENSOR",
+      "name": "2-Pin Engine Coolant Temperature (ECT) Sensor Circuit",
+      "mgp_part": "13650-78G00",
+      "location": "Thermostat housing on cylinder head (transmission side)",
+      "pins": [
+        { "sensor_pin": 1, "ecm_pin": "C41", "signal": "ECT Signal (5V Pull-up inside ECM)", "wire_color": "Light Green/White (Lg/W)", "expected_koeo_v": "2.1 - 2.9 V (at 25°C Cold)", "expected_idle_v": "0.45 - 0.85 V (at 90°C Warm)" },
+        { "sensor_pin": 2, "ecm_pin": "C19", "signal": "Sensor Ground (E2)", "wire_color": "Brown/White (Br/W)", "expected_koeo_v": "0.00 - 0.05 V", "expected_idle_v": "0.00 - 0.05 V" }
+      ],
+      "multimeter_validation_rules": {
+        "ref_voltage_min": 4.75,
+        "ref_voltage_max": 5.2,
+        "idle_signal_min": 0.4,
+        "idle_signal_max": 0.95,
+        "resistance_20c_min": 2200,
+        "resistance_20c_max": 2700,
+        "resistance_80c_min": 290,
+        "resistance_80c_max": 350
+      }
+    },
+    "TPS_SENSOR": {
+      "id": "TPS_SENSOR",
+      "name": "3-Pin Throttle Position Sensor (TPS) Circuit",
+      "mgp_part": "13420-79G00",
+      "location": "Side of throttle body opposite throttle cable",
+      "pins": [
+        { "sensor_pin": 1, "ecm_pin": "C32", "signal": "5V Regulated Reference (VCC)", "wire_color": "Red/Blue (R/Bl)", "expected_koeo_v": "4.85 - 5.15 V", "expected_idle_v": "4.85 - 5.15 V" },
+        { "sensor_pin": 2, "ecm_pin": "C43", "signal": "TPS Wiper Signal Output", "wire_color": "Yellow/Green (Y/G)", "expected_koeo_v": "0.45 - 0.65 V (Closed) / 4.3 V (WOT)", "expected_idle_v": "0.45 - 0.65 V" },
+        { "sensor_pin": 3, "ecm_pin": "C19", "signal": "Sensor Ground (E2)", "wire_color": "Brown/White (Br/W)", "expected_koeo_v": "0.00 - 0.05 V", "expected_idle_v": "0.00 - 0.05 V" }
+      ],
+      "multimeter_validation_rules": {
+        "ref_voltage_min": 4.8,
+        "ref_voltage_max": 5.2,
+        "idle_signal_min": 0.45,
+        "idle_signal_max": 0.68,
+        "wot_signal_min": 4.0,
+        "wot_signal_max": 4.8
+      }
+    },
+    "CKP_SENSOR": {
+      "id": "CKP_SENSOR",
+      "name": "Crankshaft Position Sensor (CKP) Reluctor Circuit",
+      "mgp_part": "33220-76G30",
+      "location": "Lower engine block adjacent to crankshaft pulley / flywheel toothed wheel",
+      "pins": [
+        { "sensor_pin": 1, "ecm_pin": "C27", "signal": "CKP+ Signal High", "wire_color": "Green (G)", "expected_koeo_v": "0.0 V AC (480-650 Ω across Pin 1 & 2)", "expected_idle_v": "2.0 - 5.0 V AC RMS" },
+        { "sensor_pin": 2, "ecm_pin": "C28", "signal": "CKP- Signal Low", "wire_color": "Blue (Bl)", "expected_koeo_v": "0.0 V AC", "expected_idle_v": "Reference Low" },
+        { "sensor_pin": 3, "ecm_pin": "C29", "signal": "EMI Braided Shield Ground", "wire_color": "Black/White (B/W)", "expected_koeo_v": "0.00 V", "expected_idle_v": "0.00 V" }
+      ],
+      "multimeter_validation_rules": {
+        "resistance_20c_min": 480,
+        "resistance_20c_max": 650,
+        "idle_signal_min": 1.8,
+        "idle_signal_max": 6.5
+      }
+    },
+    "O2_SENSOR_B1S1": {
+      "id": "O2_SENSOR_B1S1",
+      "name": "4-Wire Heated Upstream Oxygen Sensor (HO2S-1)",
+      "mgp_part": "18213-68K00",
+      "location": "Exhaust manifold front collector pipe (Pre-Catalyst)",
+      "pins": [
+        { "sensor_pin": 1, "ecm_pin": "C46", "signal": "O2 Sensor Zirconia Voltage Signal+", "wire_color": "Black (Sensor) -> Yellow/Red (Harness)", "expected_koeo_v": "0.45 V Bias", "expected_idle_v": "0.10 - 0.90 V Cycling" },
+        { "sensor_pin": 2, "ecm_pin": "C19", "signal": "O2 Sensor Reference Ground-", "wire_color": "Grey (Sensor) -> Brown/White (Harness)", "expected_koeo_v": "0.00 - 0.05 V", "expected_idle_v": "0.00 - 0.05 V" },
+        { "sensor_pin": 3, "ecm_pin": "MAIN_RELAY", "signal": "Heater +12V Power Supply", "wire_color": "White (Sensor) -> White/Red (Harness)", "expected_koeo_v": "12.0 - 12.6 V", "expected_idle_v": "13.6 - 14.4 V" },
+        { "sensor_pin": 4, "ecm_pin": "C05", "signal": "Heater PWM Low-Side Ground Control", "wire_color": "White (Sensor) -> Pink/Black (Harness)", "expected_koeo_v": "12V (OFF) / < 1.0V (ON)", "expected_idle_v": "PWM Duty Cycle" }
+      ],
+      "multimeter_validation_rules": {
+        "ref_voltage_min": 11.8,
+        "ref_voltage_max": 14.6,
+        "resistance_20c_min": 5.0,
+        "resistance_20c_max": 9.5,
+        "idle_signal_min": 0.1,
+        "idle_signal_max": 0.9
+      }
+    },
+    "IACV_VALVE": {
+      "id": "IACV_VALVE",
+      "name": "Idle Air Control Valve (IACV) Stepper Circuit",
+      "mgp_part": "18137-79G01",
+      "location": "Lower housing of F8D throttle body",
+      "pins": [
+        { "sensor_pin": 1, "ecm_pin": "C08", "signal": "Stepper Coil Phase A1", "wire_color": "Blue/Red (Bl/R)", "expected_koeo_v": "Pulse during key-off reset", "expected_idle_v": "28 - 36 Ω per coil winding" },
+        { "sensor_pin": 2, "ecm_pin": "MAIN_RELAY", "signal": "+12V Common Supply", "wire_color": "White/Red (W/R)", "expected_koeo_v": "12.0 - 12.6 V", "expected_idle_v": "13.6 - 14.4 V" },
+        { "sensor_pin": 3, "ecm_pin": "C09", "signal": "Stepper Coil Phase A2", "wire_color": "Blue/Black (Bl/B)", "expected_koeo_v": "Pulse", "expected_idle_v": "28 - 36 Ω" },
+        { "sensor_pin": 4, "ecm_pin": "C10", "signal": "Stepper Coil Phase B1", "wire_color": "Blue/Yellow (Bl/Y)", "expected_koeo_v": "Pulse", "expected_idle_v": "28 - 36 Ω" }
+      ],
+      "multimeter_validation_rules": {
+        "ref_voltage_min": 11.8,
+        "ref_voltage_max": 14.6,
+        "resistance_20c_min": 28.0,
+        "resistance_20c_max": 36.0
+      }
+    }
+  }
+}

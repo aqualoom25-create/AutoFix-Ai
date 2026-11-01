@@ -1,0 +1,399 @@
+{
+  "vehicle_target": "Maruti Suzuki Alto 800 (2013, 0.8L F8D MPFI Petrol)",
+  "version": "1.0.0",
+  "dtc_codes": {
+    "P0105": {
+      "code": "P0105",
+      "title": "Manifold Absolute Pressure (MAP) Sensor Circuit Malfunction",
+      "category": "Fuel & Air Metering",
+      "severity": "HIGH",
+      "mil_illumination": true,
+      "f8d_specific_context": "On the 2013 Alto 800 F8D engine, the 4-pin integrated MAP/IAT sensor is mounted directly on top of the plastic/aluminum intake manifold plenum (MGP Part #18590-68K00). Oil vapor blow-by from the PCV valve or a cracked vacuum port O-ring frequently contaminates or unseats this sensor.",
+      "common_symptoms": [
+        "Rough or surging idle (fluctuating between 600 and 1,300 RPM)",
+        "Black exhaust smoke and strong unburnt petrol smell (rich running)",
+        "Hesitation or jerking during initial throttle tip-in",
+        "Poor fuel economy (dropping below 12-14 km/L)"
+      ],
+      "probable_causes": [
+        { "cause": "Clogged or oil-fouled MAP sensor diaphragm port on intake plenum", "probability": 0.40 },
+        { "cause": "Cracked MAP sensor O-ring or intake manifold vacuum leak (brake booster hose / PCV hose)", "probability": 0.25 },
+        { "cause": "Faulty MAP/IAT sensor assembly (MGP 18590-68K00)", "probability": 0.20 },
+        { "cause": "Open/short in 5V reference (Red/Blue) or MAP signal wire (Light Green/Red) to ECM", "probability": 0.15 }
+      ],
+      "diagnostic_questions": [
+        {
+          "id": "q_map_idle",
+          "question": "Does the engine RPM hunt up and down at idle when the A/C is turned off?",
+          "yes_weight_cause": 0,
+          "impact": "High likelihood of intake vacuum leak or contaminated MAP port."
+        },
+        {
+          "id": "q_map_smoke",
+          "question": "Do you notice black soot at the tailpipe or heavy fuel smell?",
+          "yes_weight_cause": 2,
+          "impact": "Indicates MAP signal is stuck high (~4.5V / ~100 kPa), causing ECM to over-fuel."
+        }
+      ],
+      "electrical_test": {
+        "component_id": "MAP_IAT_SENSOR",
+        "reference_voltage_v": "4.8 - 5.2 V (Pin 3 to Ground, Ignition ON)",
+        "signal_koeo_v": "3.8 - 4.3 V at sea level (~101 kPa)",
+        "signal_warm_idle_v": "1.1 - 1.6 V (~28 - 36 kPa)",
+        "ecm_pins": "ECM Pin C32 (5V Ref), Pin C44 (MAP Signal), Pin C19 (Sensor Ground)"
+      },
+      "repair_procedure_id": "PROC-ALTO800-MAP-01"
+    },
+    "P0107": {
+      "code": "P0107",
+      "title": "Manifold Absolute Pressure (MAP) Barometric Pressure Sensor Circuit Low Voltage",
+      "category": "Fuel & Air Metering",
+      "severity": "HIGH",
+      "mil_illumination": true,
+      "f8d_specific_context": "ECM detected MAP signal voltage below 0.25V for more than 2 seconds on the F8D intake manifold sensor.",
+      "common_symptoms": [
+        "Engine stalls immediately after starting",
+        "Severe hesitation and lean misfire under load",
+        "Check Engine Light illuminated immediately at key-on"
+      ],
+      "probable_causes": [
+        { "cause": "MAP signal wire shorted to ground or 5V reference missing", "probability": 0.45 },
+        { "cause": "Disconnected 4-pin MAP sensor connector on top of intake manifold", "probability": 0.35 },
+        { "cause": "Internal short in MAP sensor (MGP 18590-68K00)", "probability": 0.20 }
+      ],
+      "diagnostic_questions": [
+        {
+          "id": "q_p0107_conn",
+          "question": "Was the air filter box recently removed for servicing or spark plug access?",
+          "yes_weight_cause": 1,
+          "impact": "Mechanics frequently unplug the MAP sensor under the air cleaner housing and forget to reconnect it."
+        }
+      ],
+      "electrical_test": {
+        "component_id": "MAP_IAT_SENSOR",
+        "reference_voltage_v": "4.8 - 5.2 V",
+        "signal_koeo_v": "3.8 - 4.3 V",
+        "signal_warm_idle_v": "1.1 - 1.6 V",
+        "ecm_pins": "ECM Pin C32 (5V Ref), Pin C44 (MAP Signal)"
+      },
+      "repair_procedure_id": "PROC-ALTO800-MAP-01"
+    },
+    "P0115": {
+      "code": "P0115",
+      "title": "Engine Coolant Temperature (ECT) Sensor 1 Circuit Malfunction",
+      "category": "Fuel & Air Metering",
+      "severity": "MEDIUM",
+      "mil_illumination": true,
+      "f8d_specific_context": "The 2-pin NTC thermistor ECT sensor (MGP 13650-78G00) is located on the thermostat housing below the distributor/ignition coil pack side of the F8D cylinder head. It controls cold-start fuel enrichment and the radiator cooling fan relay (ON at 98°C).",
+      "common_symptoms": [
+        "Hard cold starting in the morning (requires multiple cranks)",
+        "Radiator cooling fan runs continuously as soon as ignition is turned ON (ECM fail-safe mode)",
+        "Inaccurate temperature gauge or overheating warning",
+        "Poor fuel economy due to permanent cold-enrichment mode"
+      ],
+      "probable_causes": [
+        { "cause": "Failed NTC thermistor inside ECT sensor (MGP 13650-78G00)", "probability": 0.50 },
+        { "cause": "Corroded 2-pin ECT connector due to coolant seepage at thermostat housing", "probability": 0.30 },
+        { "cause": "Open circuit in Light Green/Black signal wire or Brown/White sensor ground", "probability": 0.15 },
+        { "cause": "Stuck-open cooling thermostat (MGP 17670-65G00) preventing engine from reaching 88°C", "probability": 0.05 }
+      ],
+      "diagnostic_questions": [
+        {
+          "id": "q_ect_fan",
+          "question": "Does the radiator fan spin at full speed immediately when you turn the key to ON with a cold engine?",
+          "yes_weight_cause": 0,
+          "impact": "Confirms ECM sees an open/short in the ECT circuit and has triggered fail-safe fan operation."
+        }
+      ],
+      "electrical_test": {
+        "component_id": "ECT_SENSOR",
+        "reference_voltage_v": "4.8 - 5.1 V (Connector unplugged, across Pin 1 & 2, Ignition ON)",
+        "resistance_spec": "2,200 - 2,700 Ω at 20°C (Cold) | 290 - 350 Ω at 80°C (Hot)",
+        "signal_warm_idle_v": "0.5 - 0.9 V at 88-95°C",
+        "ecm_pins": "ECM Pin C41 (ECT Signal), Pin C19 (Sensor Ground)"
+      },
+      "repair_procedure_id": "PROC-ALTO800-ECT-01"
+    },
+    "P0120": {
+      "code": "P0120",
+      "title": "Throttle Position Sensor (TPS) / Switch 'A' Circuit Malfunction",
+      "category": "Fuel & Air Metering",
+      "severity": "HIGH",
+      "mil_illumination": true,
+      "f8d_specific_context": "The 2013 Alto 800 uses a cable-operated throttle body with a 3-pin rotary potentiometer TPS mounted on the throttle shaft opposite the accelerator cable cam.",
+      "common_symptoms": [
+        "Delayed throttle response or flat spot when pressing accelerator pedal",
+        "High idle speed (stuck at 1,500+ RPM) or stalling when releasing throttle",
+        "Jerky gear shifts during deceleration fuel cut-off"
+      ],
+      "probable_causes": [
+        { "cause": "Worn carbon resistive track inside TPS potentiometer at 0-15% throttle opening", "probability": 0.55 },
+        { "cause": "Carbon buildup around throttle butterfly plate preventing full closure", "probability": 0.25 },
+        { "cause": "Loose or oxidized 3-pin TPS harness connector", "probability": 0.20 }
+      ],
+      "diagnostic_questions": [
+        {
+          "id": "q_tps_jerk",
+          "question": "Does the car jerk specifically at light throttle in 2nd or 3rd gear city traffic?",
+          "yes_weight_cause": 0,
+          "impact": "Classic symptom of TPS dead-spot wear in the 5%-20% urban driving range."
+        }
+      ],
+      "electrical_test": {
+        "component_id": "TPS_SENSOR",
+        "reference_voltage_v": "5.0 V (Pin 1 to Pin 3 Ground)",
+        "signal_koeo_v": "0.45 - 0.65 V (Closed Throttle) -> Smooth sweep to 4.2 - 4.7 V (Wide Open Throttle)",
+        "signal_warm_idle_v": "0.50 - 0.60 V (0.0% relative throttle)",
+        "ecm_pins": "ECM Pin C32 (5V Ref), Pin C43 (TPS Signal), Pin C19 (Sensor Ground)"
+      },
+      "repair_procedure_id": "PROC-ALTO800-TPS-01"
+    },
+    "P0130": {
+      "code": "P0130",
+      "title": "O2 Sensor Circuit Malfunction (Bank 1 Sensor 1 - Pre-Catalyst)",
+      "category": "Emissions & Fuel Control",
+      "severity": "MEDIUM",
+      "mil_illumination": true,
+      "f8d_specific_context": "4-wire heated Zirconia upstream Oxygen Sensor (MGP 18213-68K00) mounted in the exhaust manifold collector directly in front of the F8D engine block.",
+      "common_symptoms": [
+        "15-25% drop in fuel mileage",
+        "Failed PUC (Pollution Under Control) emissions test (High CO / HC)",
+        "Slight rough idle once engine warms up into closed-loop mode"
+      ],
+      "probable_causes": [
+        { "cause": "Aged or contaminated upstream O2 sensor element (MGP 18213-68K00)", "probability": 0.50 },
+        { "cause": "Exhaust manifold gasket leak upstream of O2 sensor", "probability": 0.25 },
+        { "cause": "Melted O2 sensor wiring harness touching hot exhaust heat shield", "probability": 0.25 }
+      ],
+      "diagnostic_questions": [
+        {
+          "id": "q_o2_mileage",
+          "question": "Has your fuel efficiency dropped significantly without any major loss of engine power?",
+          "yes_weight_cause": 0,
+          "impact": "Upstream O2 sensor sluggish response forces open-loop rich fuel mapping."
+        }
+      ],
+      "electrical_test": {
+        "component_id": "O2_SENSOR_B1S1",
+        "reference_voltage_v": "0.45 V bias voltage (Key ON, Cold) | Heater supply 12V on White/Red wire",
+        "resistance_spec": "Heater coil (2 same-color wires): 5.0 - 9.5 Ω at 20°C",
+        "signal_warm_idle_v": "Rapid oscillation between 0.15 V (Lean) and 0.85 V (Rich) at 2,000 RPM",
+        "ecm_pins": "ECM Pin C46 (O2S-1 Signal), Pin C05 (O2S-1 Heater Control)"
+      },
+      "repair_procedure_id": "PROC-ALTO800-O2S-01"
+    },
+    "P0171": {
+      "code": "P0171",
+      "title": "System Too Lean (Bank 1)",
+      "category": "Fuel & Air Metering",
+      "severity": "HIGH",
+      "mil_illumination": true,
+      "f8d_specific_context": "Long Term Fuel Trim (LTFT) has exceeded +25% on the F8D engine, meaning the ECM is adding maximum fuel to compensate for excess air or insufficient fuel rail pressure.",
+      "common_symptoms": [
+        "Loss of power when climbing slopes or with A/C ON",
+        "Engine pinging / knocking under acceleration",
+        "High or unstable idle speed"
+      ],
+      "probable_causes": [
+        { "cause": "Vacuum leak at intake manifold gasket, PCV valve hose, or brake booster vacuum line", "probability": 0.45 },
+        { "cause": "Weak in-tank fuel pump or clogged fuel filter (pressure below 3.0 bar / 300 kPa)", "probability": 0.30 },
+        { "cause": "Partially clogged fuel injectors (3 injectors on F8D rail)", "probability": 0.15 },
+        { "cause": "Exhaust leak before upstream O2 sensor drawing false air", "probability": 0.10 }
+      ],
+      "diagnostic_questions": [
+        {
+          "id": "q_lean_rpm",
+          "question": "Does the engine run smoother at high RPM (3,000 RPM) than at idle (800 RPM)?",
+          "yes_weight_cause": 0,
+          "impact": "If fuel trims improve at 3,000 RPM, the root cause is an intake vacuum leak. If it stays lean or worsens under load, suspect low fuel pump pressure."
+        }
+      ],
+      "electrical_test": {
+        "component_id": "FUEL_INJECTORS_AND_PUMP",
+        "reference_voltage_v": "12.0 - 14.2 V at Fuel Pump Relay and Injector Common Supply",
+        "resistance_spec": "Fuel Injector Coil (Cyl 1, 2, 3): 11.5 - 13.5 Ω at 20°C",
+        "signal_warm_idle_v": "LTFT + STFT combined should return within ±10% after repair",
+        "ecm_pins": "ECM Pins C01, C02, C03 (Injector 1, 2, 3 Drivers)"
+      },
+      "repair_procedure_id": "PROC-ALTO800-FUEL-01"
+    },
+    "P0300": {
+      "code": "P0300",
+      "title": "Random / Multiple Cylinder Misfire Detected (F8D 3-Cylinder)",
+      "category": "Ignition & Mechanical",
+      "severity": "CRITICAL",
+      "mil_illumination": true,
+      "f8d_specific_context": "Because the F8D is a 3-cylinder 796cc engine (firing order 1-3-2), any misfire causes pronounced cabin vibration and immediate loss of pulling power. Flashing Check Engine Light warns of catalytic converter overheating risk.",
+      "common_symptoms": [
+        "Severe engine shaking / vibration felt in steering wheel and gear lever",
+        "Flashing or steady Check Engine Light",
+        "Popping / chugging sound from exhaust pipe",
+        "Struggles to climb inclines even in 1st or 2nd gear"
+      ],
+      "probable_causes": [
+        { "cause": "Worn or oil/carbon-fouled spark plugs (NGK DCPR7E, gap > 1.0 mm)", "probability": 0.40 },
+        { "cause": "Failing ignition coil pack or leaking high-tension spark plug cords", "probability": 0.30 },
+        { "cause": "Tight exhaust valve clearance or burnt exhaust valve (common on high-mileage / LPG-CNG F8D engines)", "probability": 0.20 },
+        { "cause": "Low fuel rail pressure or contaminated petrol", "probability": 0.10 }
+      ],
+      "diagnostic_questions": [
+        {
+          "id": "q_misfire_cel",
+          "question": "Is the Check Engine Light blinking/flashing while driving?",
+          "yes_weight_cause": 0,
+          "impact": "SAFETY CRITICAL: Unburnt fuel is entering the catalytic converter. Avoid heavy load driving until ignition is repaired."
+        },
+        {
+          "id": "q_misfire_plugs",
+          "question": "Have the spark plugs been used for more than 20,000 km?",
+          "yes_weight_cause": 0,
+          "impact": "Standard nickel NGK DCPR7E plugs on the Alto 800 require inspection every 10,000 km and replacement every 20,000 km."
+        }
+      ],
+      "electrical_test": {
+        "component_id": "IGNITION_SYSTEM",
+        "reference_voltage_v": "12V Battery supply on Black/White wire at Ignition Coil connector",
+        "resistance_spec": "Primary coil: 0.5 - 1.5 Ω | HT Cord resistance: 3 - 10 kΩ",
+        "signal_warm_idle_v": "Clean 12V-0V primary switching pulse on ECM coil driver pins",
+        "ecm_pins": "ECM Pins C14, C15, C16 (Ignition Coil Drivers)"
+      },
+      "repair_procedure_id": "PROC-ALTO800-IGN-01"
+    },
+    "P0301": {
+      "code": "P0301",
+      "title": "Cylinder 1 Misfire Detected (Timing Belt End)",
+      "category": "Ignition & Mechanical",
+      "severity": "CRITICAL",
+      "mil_illumination": true,
+      "f8d_specific_context": "Crankshaft acceleration tooth-time variation detected specifically on Cylinder #1 (closest to the camshaft timing belt cover on the left side of the engine bay).",
+      "common_symptoms": [
+        "Rhythmic engine shaking at idle (running on 2 cylinders)",
+        "Strong smell of raw fuel",
+        "Loss of 33% engine torque"
+      ],
+      "probable_causes": [
+        { "cause": "Faulty Cylinder #1 spark plug (NGK DCPR7E) or Cylinder #1 ignition coil/boot", "probability": 0.50 },
+        { "cause": "Clogged or electrically open Cylinder #1 fuel injector (MGP 15710-68K00)", "probability": 0.30 },
+        { "cause": "Low compression in Cylinder #1 (< 11.5 bar) due to valve seating or head gasket", "probability": 0.20 }
+      ],
+      "diagnostic_questions": [
+        {
+          "id": "q_p0301_swap",
+          "question": "If you swap the spark plug and coil from Cylinder 1 to Cylinder 2, does the fault code move to P0302?",
+          "yes_weight_cause": 0,
+          "impact": "Swapping ignition components between cylinders 1 and 2 isolates a bad plug/coil in 5 minutes without buying parts blindly."
+        }
+      ],
+      "electrical_test": {
+        "component_id": "IGNITION_SYSTEM",
+        "reference_voltage_v": "12V Supply at Coil & Injector #1",
+        "resistance_spec": "Injector #1 resistance: 11.5 - 13.5 Ω at 20°C",
+        "signal_warm_idle_v": "3.2 - 3.8 ms injector pulse width at warm idle",
+        "ecm_pins": "ECM Pin C14 (Coil 1), Pin C01 (Injector 1)"
+      },
+      "repair_procedure_id": "PROC-ALTO800-IGN-01"
+    },
+    "P0335": {
+      "code": "P0335",
+      "title": "Crankshaft Position Sensor (CKP) 'A' Circuit Malfunction",
+      "category": "Engine Timing & Sensors",
+      "severity": "CRITICAL",
+      "mil_illumination": true,
+      "f8d_specific_context": "Inductive/Hall CKP sensor (MGP 33220-76G30) reading the toothed reluctor wheel on the F8D crankshaft pulley/flywheel end. Without CKP signal, the ECM disables both fuel injection and spark.",
+      "common_symptoms": [
+        "Engine cranks normally on starter motor but will NOT start (No Spark, No Fuel Pulse)",
+        "Sudden engine stall when engine gets hot in traffic, then restarts after cooling down for 20 minutes",
+        "Tachometer / RPM reading stays at 0 RPM while cranking"
+      ],
+      "probable_causes": [
+        { "cause": "Heat-degraded internal coil in CKP sensor (MGP 33220-76G30)", "probability": 0.55 },
+        { "cause": "Metal shavings or oil sludge coating magnetic tip of CKP sensor (air gap > 1.2 mm)", "probability": 0.25 },
+        { "cause": "Damaged CKP wiring near crankshaft pulley or loose 2/3-pin connector", "probability": 0.20 }
+      ],
+      "diagnostic_questions": [
+        {
+          "id": "q_ckp_hotstall",
+          "question": "Does the engine stall when hot and start working again after cooling down?",
+          "yes_weight_cause": 0,
+          "impact": "Thermal expansion opens a hairline fracture inside the CKP sensor copper winding — a classic F8D failure mode."
+        }
+      ],
+      "electrical_test": {
+        "component_id": "CKP_SENSOR",
+        "reference_voltage_v": "Inductive AC output during cranking: > 0.5 V AC RMS (or 5V Hall pulse depending on ECM type)",
+        "resistance_spec": "Inductive CKP coil resistance: 480 - 650 Ω at 20°C",
+        "signal_warm_idle_v": "2.0 - 5.0 V AC at 800 RPM idle",
+        "ecm_pins": "ECM Pin C27 (CKP+), Pin C28 (CKP-), Pin C29 (Shield)"
+      },
+      "repair_procedure_id": "PROC-ALTO800-CKP-01"
+    },
+    "P0500": {
+      "code": "P0500",
+      "title": "Vehicle Speed Sensor (VSS) 'A' Malfunction",
+      "category": "Drivetrain & Sensors",
+      "severity": "MEDIUM",
+      "mil_illumination": true,
+      "f8d_specific_context": "3-pin Hall-effect Vehicle Speed Sensor mounted on the 5-speed manual transaxle differential housing. Feeds speed pulses to both the instrument cluster odometer/speedometer and the ECM (for idle decay and Electric Power Steering assist damping).",
+      "common_symptoms": [
+        "Speedometer needle drops to 0 km/h while driving",
+        "Engine stalls when pressing the clutch pedal while slowing down for a speed breaker or stop",
+        "Power steering (EPS on VXi/LXi) feels unusually heavy or light at highway speeds"
+      ],
+      "probable_causes": [
+        { "cause": "Failed 3-pin Hall VSS sensor on gearbox housing (MGP 34960-68K00)", "probability": 0.50 },
+        { "cause": "Stripped plastic speedometer driven gear inside transaxle", "probability": 0.25 },
+        { "cause": "Broken wire or oil contamination in VSS 3-pin plug at back of gearbox", "probability": 0.25 }
+      ],
+      "diagnostic_questions": [
+        {
+          "id": "q_vss_speedo",
+          "question": "Is the dashboard speedometer needle also dead (showing 0 km/h) when the car is moving?",
+          "yes_weight_cause": 0,
+          "impact": "Confirms the VSS sensor or its driven gear on the gearbox is not generating square-wave pulses."
+        }
+      ],
+      "electrical_test": {
+        "component_id": "VSS_SENSOR",
+        "reference_voltage_v": "Pin 1: 12V Ignition | Pin 2: Ground | Pin 3: Signal (0V - 5V/12V pulse)",
+        "resistance_spec": "Hall IC sensor — do not measure resistance directly across IC pins; measure voltage pulse while rotating front wheel",
+        "signal_warm_idle_v": "Alternating 0V to 4.8V square wave (4 pulses per revolution) when lifted front wheel is spun",
+        "ecm_pins": "ECM Pin C52 (VSS Signal Input)"
+      },
+      "repair_procedure_id": "PROC-ALTO800-VSS-01"
+    },
+    "P0505": {
+      "code": "P0505",
+      "title": "Idle Air Control (IACV) System Malfunction",
+      "category": "Fuel & Air Metering",
+      "severity": "MEDIUM",
+      "mil_illumination": true,
+      "f8d_specific_context": "Stepper-motor / rotary duty-solenoid Idle Air Control Valve (MGP 18137-79G01) mounted on the bottom/side of the F8D throttle body. Controls bypass air during cold fast-idle and A/C compressor load compensation.",
+      "common_symptoms": [
+        "Engine stalls immediately when turning ON the A/C at idle",
+        "No fast-idle (1,200 RPM) during cold morning start; requires holding accelerator pedal to keep engine running",
+        "Idle stuck high at 1,600 - 2,000 RPM"
+      ],
+      "probable_causes": [
+        { "cause": "Carbon and gummy blow-by deposits jamming the IACV pintle/bypass passage in throttle body", "probability": 0.65 },
+        { "cause": "Open winding in IACV stepper motor coils (MGP 18137-79G01)", "probability": 0.25 },
+        { "cause": "Faulty IACV connector or ECM stepper driver output", "probability": 0.10 }
+      ],
+      "diagnostic_questions": [
+        {
+          "id": "q_iacv_ac",
+          "question": "Does the RPM drop below 550 RPM or stall as soon as the A/C compressor clicks ON?",
+          "yes_weight_cause": 0,
+          "impact": "Directly points to a carbon-stuck IACV bypass passage unable to add load-compensation air."
+        }
+      ],
+      "electrical_test": {
+        "component_id": "IACV_VALVE",
+        "reference_voltage_v": "12V at common power pins (Ignition ON)",
+        "resistance_spec": "Each stepper coil winding: 28 - 36 Ω at 20°C",
+        "signal_warm_idle_v": "IACV Step Position: 15 - 35 steps (A/C OFF) | 40 - 65 steps (A/C ON)",
+        "ecm_pins": "ECM Pins C08, C09, C10, C11 (IACV Stepper Coils 1A, 1B, 2A, 2B)"
+      },
+      "repair_procedure_id": "PROC-ALTO800-IACV-01"
+    }
+  }
+}

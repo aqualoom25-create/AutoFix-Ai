@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoFix AI — 2013 Maruti Suzuki Alto 800 (F8D Petrol) Engineering & DIY Diagnostic SaaS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+    }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.85);
+      border: 1px solid rgba(59, 130, 246, 0.22);
+      backdrop-filter: blur(12px);
+    }
+    .nav-btn.active {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      border-color: #60a5fa;
+      box-shadow: 0 0 18px rgba(37, 99, 235, 0.45);
+    }
+    .dlc-pin:hover {
+      transform: scale(1.06);
+      border-color: #38bdf8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <!-- Top Header -->
+  <header class="border-b border-slate-800 bg-slate-950/90 sticky top-0 z-40 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-blue-600/30">
+          AF
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg font-bold tracking-tight text-white">AutoFix AI</h1>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold">SaaS v1.0</span>
+          </div>
+          <p class="text-xs text-slate-400">Maruti Suzuki Alto 800 (2013 • 0.8L F8D 12V MPFI Petrol • BS-IV) Engineering Platform</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div id="connection-badge" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-medium">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span id="connection-text">ECU Simulator Ready (ISO 14230-4 KWP2000 / CAN)</span>
+        </div>
+        <a href="/docs" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition">
+          OpenAPI Console ↗
+        </a>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="max-w-7xl mx-auto px-4 pb-2 flex flex-wrap gap-2">
+      <button onclick="switchTab('garage')" id="tab-btn-garage" class="nav-btn active px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 transition">
+        1. My Garage (Alto 800)
+      </button>
+      <button onclick="switchTab('scanner')" id="tab-btn-scanner" class="nav-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 transition">
+        2. OBD-II & K-Line Scanner
+      </button>
+      <button onclick="switchTab('diagnostics')" id="tab-btn-diagnostics" class="nav-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 transition">
+        3. AI Diagnostic Engine
+      </button>
+      <button onclick="switchTab('wiring')" id="tab-btn-wiring" class="nav-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 transition">
+        4. Wiring & Multimeter Lab
+      </button>
+      <button onclick="switchTab('diy')" id="tab-btn-diy" class="nav-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 transition">
+        5. Guided DIY & MGP Parts
+      </button>
+      <button onclick="switchTab('reports')" id="tab-btn-reports" class="nav-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 transition">
+        6. Repair Verification Reports
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="max-w-7xl mx-auto w-full px-4 py-6 flex-1 space-y-6">
+
+    <!-- TAB 1: MY GARAGE -->
+    <section id="tab-garage" class="space-y-6">
+      <!-- Hero Garage Card matching prototype + full engineering specs -->
+      <div class="glass-card rounded-2xl p-6 border border-blue-500/30 shadow-xl">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div class="space-y-2">
+            <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">
+              <span>MY GARAGE • PRIMARY VEHICLE</span>
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">BS-IV Petrol</span>
+            </div>
+            <h2 class="text-3xl font-extrabold text-white" id="garage-vehicle-title">Maruti Suzuki Alto 800</h2>
+            <p class="text-sm text-slate-300" id="garage-vehicle-subtitle">
+              2013 • Petrol • Manual (5MT) • Engine: F8D 796cc 3-Cylinder 12-Valve MPFI (47.3 bhp @ 6000 RPM)
+            </p>
+            <div class="flex flex-wrap gap-3 pt-2 text-xs text-slate-400">
+              <span class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800">Platform: <strong class="text-slate-200">FB308 (Type 1)</strong></span>
+              <span class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800">ECM: <strong class="text-slate-200">Bosch ME17.9.71 / Delphi MT22.1</strong></span>
+              <span class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800">DLC: <strong class="text-slate-200">16-Pin OBD-II (Driver Footwell Right)</strong></span>
+              <span class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800">Firing Order: <strong class="text-slate-200">1 - 3 - 2</strong></span>
+            </div>
+          </div>
+
+          <!-- 4 Action Tiles from User's UI Concept -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:w-auto">
+            <button onclick="switchTab('scanner')" class="p-4 rounded-xl bg-slate-900/90 hover:bg-blue-950/60 border border-slate-800 hover:border-blue-500/50 text-left transition group">
+              <div class="text-blue-400 font-bold text-sm group-hover:text-blue-300">Scan Vehicle</div>
+              <div class="text-xs text-slate-400 mt-1">Read fault codes & live PIDs</div>
+            </button>
+            <button onclick="switchTab('diagnostics')" class="p-4 rounded-xl bg-slate-900/90 hover:bg-blue-950/60 border border-slate-800 hover:border-blue-500/50 text-left transition group">
+              <div class="text-cyan-400 font-bold text-sm group-hover:text-cyan-300">AI Diagnosis</div>
+              <div class="text-xs text-slate-400 mt-1">Find probable causes</div>
+            </button>
+            <button onclick="switchTab('diy')" class="p-4 rounded-xl bg-slate-900/90 hover:bg-blue-950/60 border border-slate-800 hover:border-blue-500/50 text-left transition group">
+              <div class="text-emerald-400 font-bold text-sm group-hover:text-emerald-300">DIY Repair</div>
+              <div class="text-xs text-slate-400 mt-1">Guided MGP procedures</div>
+            </button>
+            <button onclick="switchTab('reports')" class="p-4 rounded-xl bg-slate-900/90 hover:bg-blue-950/60 border border-slate-800 hover:border-blue-500/50 text-left transition group">
+              <div class="text-purple-400 font-bold text-sm group-hover:text-purple-300">Repair Report</div>
+              <div class="text-xs text-slate-400 mt-1">Track & verify fixes</div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Engineering Reference Cards for 2013 Alto 800 Petrol -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="glass-card rounded-xl p-5 space-y-3">
+          <h3 class="text-sm font-bold text-blue-400 uppercase tracking-wider">F8D 796cc Mechanical Specs</h3>
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between py-1 border-b border-slate-800/80"><span class="text-slate-400">Displacement / Configuration</span><span class="font-semibold text-white">796 cc • 3-Cyl 12V SOHC</span></div>
+            <div class="flex justify-between py-1 border-b border-slate-800/80"><span class="text-slate-400">Bore × Stroke</span><span class="font-semibold text-white">68.5 mm × 72.0 mm</span></div>
+            <div class="flex justify-between py-1 border-b border-slate-800/80"><span class="text-slate-400">Cylinder Compression</span><span class="font-semibold text-emerald-300">14.0 bar (Min 11.5 bar)</span></div>
+            <div class="flex justify-between py-1 border-b border-slate-800/80"><span class="text-slate-400">Valve Clearance (Cold)</span><span class="font-semibold text-white">IN: 0.15mm | EX: 0.25mm</span></div>
+            <div class="flex justify-between py-1 border-b border-slate-800/80"><span class="text-slate-400">Spark Plug (OEM MGP)</span><span class="font-semibold text-white">NGK DCPR7E (0.8-0.9 mm)</span></div>
+            <div class="flex justify-between py-1"><span class="text-slate-400">Warm Idle Speed</span><span class="font-semibold text-white">800 ± 50 RPM (A/C OFF)</span></div>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-xl p-5 space-y-3">
+          <h3 class="text-sm font-bold text-cyan-400 uppercase tracking-wider">Fuel, Cooling & Lubrication</h3>
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between py-1 border-b border-slate-800/80"><span class="text-slate-400">Fuel Rail Pressure</span><span class="font-semibold text-emerald-300">3.5 bar (350 kPa) Returnless</span></div>
+            <div class="flex justify-between py-1 border-b border-slate-800/80"><span class="text-slate-400">Injector Resistance (20°C)</span><span class="font-semibold text-white">11.5 – 13.5 Ω (Cyl 1, 2, 3)</span></div>
+            <div class="flex justify-between py-1 border-b border-slate-800/80"><span class="text-slate-400">Engine Oil Capacity</span><span class="font-semibold text-white">2.7 L (SAE 5W-30 API SN)</span></div>
+            <div class="flex justify-between py-1 border-b border-slate-800/80"><span class="text-slate-400">Coolant Capacity</span><span class="font-semibold text-white">4.0 L (50:50 Golden/Green)</span></div>
+            <div class="flex justify-between py-1 border-b border-slate-800/80"><span class="text-slate-400">Thermostat / Fan ON Temp</span><span class="font-semibold text-white">Opens 88°C / Fan ON 98°C</span></div>
+            <div class="flex justify-between py-1"><span class="text-slate-400">5MT Transaxle Gear Oil</span><span class="font-semibold text-white">2.1 L (SAE 75W-90 GL-4)</span></div>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-xl p-5 space-y-3">
+          <h3 class="text-sm font-bold text-amber-400 uppercase tracking-wider">Hardware & Protocol Strategy</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            The 2013 Alto 800 (FB308 BS-IV) features a <strong>16-pin J1962 OBD-II port</strong> under the driver dash. Unlike cheap V2.1 clone scanners that drop K-Line init bytes, use a genuine <strong>PIC18F25K80 ELM327 v1.5</strong> or our custom <strong>ESP32 + L9637D K-Line / CAN Bridge</strong>.
+          </p>
+          <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 text-xs space-y-1">
+            <div><span class="text-slate-400">Pin 7 (Purple/Yellow):</span> <strong class="text-amber-300">ISO 14230-4 KWP2000 (ATSP 5)</strong></div>
+            <div><span class="text-slate-400">Pins 6 & 14 (CAN H/L):</span> <strong class="text-blue-300">ISO 15765-4 500kbps (ATSP 6)</strong></div>
+            <div><span class="text-slate-400">Pin 16 (+12V) & Pin 4/5:</span> <strong class="text-emerald-300">Battery Power & CGND/SGND</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: OBD-II & K-LINE LIVE SCANNER -->
+    <section id="tab-scanner" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-bold text-white">OBD-II / KWP2000 Hardware Interface & F8D ECU Simulator</h2>
+            <p class="text-xs text-slate-400">Connect via WebSerial / Local COM Port (ELM327 v1.5 / ESP32 K-Line Bridge) or run validated 2013 Alto 800 fault profiles</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="connectWebSerialOBD()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow">
+              Connect USB / Bluetooth OBD (WebSerial)
+            </button>
+            <button onclick="scanECU()" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow">
+              Poll ECM & Read Fault Codes
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-slate-800">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Select Alto 800 F8D Operating / Fault Profile</label>
+            <select id="scanner-scenario-select" onchange="scanECU()" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white">
+              <option value="p0105_map_vacuum_leak">Fault 1: Intake Vacuum Leak + MAP Sensor (P0105 + P0171)</option>
+              <option value="p0301_cyl1_misfire">Fault 2: Cylinder #1 Ignition Misfire on 3-Cyl F8D (P0300 + P0301)</option>
+              <option value="p0115_ect_sensor_open">Fault 3: Open ECT Coolant Sensor — Fan Stuck ON (P0115)</option>
+              <option value="p0505_iacv_ac_stall">Fault 4: Carbon-Jammed IACV — Stalls When A/C ON (P0505)</option>
+              <option value="p0335_ckp_hot_no_start">Fault 5: Thermal CKP Sensor Failure — Hot No-Start (P0335)</option>
+              <option value="healthy_warm_idle">Healthy Baseline: 2013 Alto 800 Warm Idle (90°C, 805 RPM, No DTCs)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Active Diagnostic Protocol</label>
+            <div id="scanner-protocol-box" class="px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-xs text-cyan-300 font-mono truncate">
+              ISO 14230-4 KWP2000 (Fast Init 10.4 kbps on DLC Pin 7)
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Check Engine Light (MIL) & Stored DTCs</label>
+            <div id="scanner-dtc-badges" class="flex flex-wrap items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 min-h-[34px]">
+              <span class="text-xs text-amber-300 font-bold">Click Poll ECM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Telemetry Grid -->
+        <div id="telemetry-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-2">
+          <!-- Populated dynamically by JS -->
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-slate-800">
+          <div class="text-xs text-slate-400">
+            ELM327 Init Sequence: <code class="text-blue-300">ATZ → ATE0 → ATH1 → ATSP 5 → ATSH 81 10 F1 → 0100 → 03</code>
+          </div>
+          <button onclick="transferScannerToAI()" class="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white text-xs font-bold shadow-lg transition">
+            Send Live Telemetry & DTCs to AI Diagnostic Engine →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: AI DIAGNOSTIC ENGINE -->
+    <section id="tab-diagnostics" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Input Panel -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <h2 class="text-base font-bold text-white">Fault Code & Symptom Input</h2>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">DTC Codes (comma separated)</label>
+            <input id="diag-dtc-input" type="text" value="P0105, P0171" placeholder="e.g. P0105, P0301, P0115, P0505"
+              class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-sm text-white font-mono" />
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              <button onclick="quickSetDTC('P0105, P0171')" class="text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-blue-300">P0105+P0171 (MAP/Lean)</button>
+              <button onclick="quickSetDTC('P0300, P0301')" class="text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-red-300">P0301 (Cyl 1 Misfire)</button>
+              <button onclick="quickSetDTC('P0115')" class="text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-amber-300">P0115 (ECT Coolant)</button>
+              <button onclick="quickSetDTC('P0505')" class="text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-emerald-300">P0505 (IACV Stall)</button>
+              <button onclick="quickSetDTC('P0335')" class="text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-purple-300">P0335 (CKP No-Start)</button>
+              <button onclick="quickSetDTC('P0500')" class="text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300">P0500 (VSS Speed)</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1.5">Observed Alto 800 Symptoms</label>
+            <div class="space-y-1.5 text-xs text-slate-300" id="symptom-checkboxes">
+              <label class="flex items-center gap-2"><input type="checkbox" value="rough_idle" checked class="rounded bg-slate-900 border-slate-700" /> Rough or surging idle (600-1300 RPM)</label>
+              <label class="flex items-center gap-2"><input type="checkbox" value="stalls_with_ac" class="rounded bg-slate-900 border-slate-700" /> Engine stalls when A/C turned ON</label>
+              <label class="flex items-center gap-2"><input type="checkbox" value="engine_shaking_misfire" class="rounded bg-slate-900 border-slate-700" /> Heavy cabin vibration / running on 2 cylinders</label>
+              <label class="flex items-center gap-2"><input type="checkbox" value="cranks_no_start_hot" class="rounded bg-slate-900 border-slate-700" /> Cranks normally but won't start when hot</label>
+              <label class="flex items-center gap-2"><input type="checkbox" value="fan_always_on_cold" class="rounded bg-slate-900 border-slate-700" /> Radiator fan runs continuously on cold key-ON</label>
+              <label class="flex items-center gap-2"><input type="checkbox" value="poor_fuel_mileage_black_smoke" checked class="rounded bg-slate-900 border-slate-700" /> Poor mileage (&lt;14 km/L) or fuel smell</label>
+              <label class="flex items-center gap-2"><input type="checkbox" value="speedometer_dead_stalling" class="rounded bg-slate-900 border-slate-700" /> Speedometer dead (0 km/h) & stalls on clutch</label>
+            </div>
+          </div>
+
+          <button onclick="runAIDiagnosis()" class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition">
+            Run F8D Engineering Diagnostic Engine
+          </button>
+        </div>
+
+        <!-- Right Output Panel -->
+        <div class="lg:col-span-2 space-y-5" id="diagnosis-results-container">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: WIRING DIAGRAMS & MULTIMETER PINOUT VALIDATOR -->
+    <section id="tab-wiring" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- 16-Pin OBD-II DLC Pinout Visualizer -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div>
+            <h2 class="text-base font-bold text-white">2013 Alto 800 16-Pin SAE J1962 OBD-II DLC Pinout</h2>
+            <p class="text-xs text-slate-400">Location: Under driver dashboard, lower right near steering column & fuse box. Click any populated pin to inspect voltage & wire color.</p>
+          </div>
+
+          <!-- Interactive 16-Pin Connector Grid -->
+          <div class="p-4 rounded-xl bg-slate-950 border-2 border-slate-700 space-y-3">
+            <div class="text-[11px] text-center text-slate-400 font-mono">TOP ROW (Pins 1 – 8)</div>
+            <div class="grid grid-cols-8 gap-1.5" id="dlc-row-top"></div>
+            <div class="grid grid-cols-8 gap-1.5 pt-1" id="dlc-row-bottom"></div>
+            <div class="text-[11px] text-center text-slate-400 font-mono">BOTTOM ROW (Pins 9 – 16)</div>
+          </div>
+
+          <div id="dlc-pin-detail" class="p-3.5 rounded-xl bg-blue-950/40 border border-blue-500/30 text-xs space-y-1">
+            <div class="font-bold text-blue-300">Pin 7 — ISO 14230-4 KWP2000 K-Line (Purple/Yellow)</div>
+            <div class="text-slate-300">Connects to ECM, Immobilizer & EPS. Nominal Voltage: 11.5–12.5V idle (pulled high to +B), pulses 0V–12V at 10.4 kbps during diagnostic communication.</div>
+          </div>
+        </div>
+
+        <!-- Interactive Multimeter Circuit Validator -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div>
+            <h2 class="text-base font-bold text-white">Interactive Multimeter Pinout Validator (Bosch ME17.9.71 / F8D)</h2>
+            <p class="text-xs text-slate-400">Select an F8D sensor circuit, inspect its ECM pinout, and enter your multimeter readings to verify whether the sensor or wiring harness is faulty.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Select F8D Sensor Circuit</label>
+              <select id="wiring-circuit-select" onchange="renderSelectedCircuit()" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white">
+                <option value="MAP_IAT_SENSOR">4-Pin MAP & IAT Sensor (MGP 18590-68K00)</option>
+                <option value="ECT_SENSOR">2-Pin Coolant Temp ECT Sensor (MGP 13650-78G00)</option>
+                <option value="TPS_SENSOR">3-Pin Throttle Position TPS (MGP 13420-79G00)</option>
+                <option value="CKP_SENSOR">3-Pin Crankshaft Position CKP (MGP 33220-76G30)</option>
+                <option value="O2_SENSOR_B1S1">4-Wire Upstream O2 Sensor B1S1 (MGP 18213-68K00)</option>
+                <option value="IACV_VALVE">4-Pin Idle Air Control IACV (MGP 18137-79G01)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Test Condition</label>
+              <select id="wiring-test-mode" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white">
+                <option value="idle">Warm Idle (800 RPM, 90°C)</option>
+                <option value="koeo">Key ON, Engine OFF (KOEO)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Circuit Pinout Table -->
+          <div id="circuit-pin-table" class="overflow-x-auto"></div>
+
+          <!-- Multimeter Input Form -->
+          <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800">
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">Ref Supply (V)</label>
+              <input id="mm-ref-v" type="number" step="0.05" value="5.01" class="w-full px-2.5 py-1.5 rounded bg-slate-900 border border-slate-700 text-xs text-white font-mono" />
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">Signal Out (V)</label>
+              <input id="mm-sig-v" type="number" step="0.05" value="1.35" class="w-full px-2.5 py-1.5 rounded bg-slate-900 border border-slate-700 text-xs text-white font-mono" />
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">Resistance (Ω)</label>
+              <input id="mm-res-ohm" type="number" step="1" placeholder="Optional Ω" class="w-full px-2.5 py-1.5 rounded bg-slate-900 border border-slate-700 text-xs text-white font-mono" />
+            </div>
+          </div>
+
+          <button onclick="runMultimeterValidation()" class="w-full py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition">
+            Validate Multimeter Measurements Against F8D Service Manual
+          </button>
+
+          <div id="multimeter-result-box" class="space-y-2"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: GUIDED DIY PROCEDURES & MGP PARTS -->
+    <section id="tab-diy" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-bold text-white">Guided DIY Service Procedures & Maruti Genuine Parts (MGP) Catalog</h2>
+            <p class="text-xs text-slate-400">Step-by-step repair instructions with torque specs (Nm), safety interlocks, and OEM MGP part numbers for the 2013 Alto 800 Petrol</p>
+          </div>
+        </div>
+        <div id="diy-procedures-list" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+      </div>
+    </section>
+
+    <!-- TAB 6: REPAIR VERIFICATION REPORTS -->
+    <section id="tab-reports" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Submit New Repair Verification -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <h2 class="text-base font-bold text-white">Verify & Log Completed Repair</h2>
+          <p class="text-xs text-slate-400">Enter before and after warm-idle telemetry to verify that your repair brought the F8D engine back within Maruti Suzuki specifications.</p>
+
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Repair Description</label>
+            <textarea id="rep-desc" rows="2" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white">Replaced MAP Sensor O-ring (MGP 09280-10016), cleaned intake plenum port, and cleared DTC P0105/P0171.</textarea>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div class="p-3 rounded-lg bg-red-950/30 border border-red-500/30 space-y-2">
+              <div class="font-bold text-red-300">BEFORE REPAIR</div>
+              <label class="block text-[11px] text-slate-400">Active DTCs
+                <input id="rep-before-dtc" type="text" value="P0105, P0171" class="w-full mt-0.5 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-white font-mono" />
+              </label>
+              <label class="block text-[11px] text-slate-400">Idle RPM
+                <input id="rep-before-rpm" type="number" value="1120" class="w-full mt-0.5 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-white font-mono" />
+              </label>
+              <label class="block text-[11px] text-slate-400">MAP (kPa)
+                <input id="rep-before-map" type="number" value="64" class="w-full mt-0.5 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-white font-mono" />
+              </label>
+              <label class="block text-[11px] text-slate-400">STFT (%)
+                <input id="rep-before-stft" type="number" step="0.1" value="18.6" class="w-full mt-0.5 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-white font-mono" />
+              </label>
+            </div>
+
+            <div class="p-3 rounded-lg bg-emerald-950/30 border border-emerald-500/30 space-y-2">
+              <div class="font-bold text-emerald-300">AFTER REPAIR</div>
+              <label class="block text-[11px] text-slate-400">Active DTCs (blank=none)
+                <input id="rep-after-dtc" type="text" value="" placeholder="None" class="w-full mt-0.5 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-white font-mono" />
+              </label>
+              <label class="block text-[11px] text-slate-400">Idle RPM (Spec: 750-850)
+                <input id="rep-after-rpm" type="number" value="800" class="w-full mt-0.5 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-white font-mono" />
+              </label>
+              <label class="block text-[11px] text-slate-400">MAP kPa (Spec: 27-38)
+                <input id="rep-after-map" type="number" value="32" class="w-full mt-0.5 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-white font-mono" />
+              </label>
+              <label class="block text-[11px] text-slate-400">STFT % (Spec: -8 to +8)
+                <input id="rep-after-stft" type="number" step="0.1" value="1.2" class="w-full mt-0.5 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-white font-mono" />
+              </label>
+            </div>
+          </div>
+
+          <button onclick="submitRepairVerification()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg transition">
+            Run Post-Repair Validator & Save Certificate
+          </button>
+        </div>
+
+        <!-- Saved Verification Certificates -->
+        <div class="lg:col-span-2 space-y-4">
+          <h2 class="text-base font-bold text-white">Verified Repair History & Engineering Certificates</h2>
+          <div id="repair-reports-list" class="space-y-4"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let kbData = null;
+    let currentScannerData = null;
+    let currentQAResponses = {};
+
+    function switchTab(tabName) {
+      const tabs = ['garage', 'scanner', 'diagnostics', 'wiring', 'diy', 'reports'];
+      tabs.forEach(t => {
+        document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tabName);
+        document.getElementById(`tab-btn-${t}`).classList.toggle('active', t === tabName);
+      });
+    }
+
+    async function initApp() {
+      try {
+        const kbRes = await fetch('/api/diagnosis/knowledge-base');
+        kbData = await kbRes.json();
+        renderDLCConnector();
+        renderSelectedCircuit();
+        renderDIYProcedures();
+      } catch (e) {
+        console.error('Failed loading KB:', e);
+      }
+      await scanECU();
+      await runAIDiagnosis();
+      await loadRepairReports();
+    }
+
+    async function scanECU() {
+      const scenarioKey = document.getElementById('scanner-scenario-select').value;
+      const res = await fetch('/api/hardware/connect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode: 'simulator', scenario_key: scenarioKey })
+      });
+      const data = await res.json();
+      currentScannerData = data.scenario;
+
+      document.getElementById('scanner-protocol-box').textContent = currentScannerData.protocol_detected;
+      const dtcContainer = document.getElementById('scanner-dtc-badges');
+      const codes = currentScannerData.dtc_codes || [];
+      if (codes.length === 0) {
+        dtcContainer.innerHTML = `<span class="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold">MIL OFF • 0 Fault Codes</span>`;
+      } else {
+        dtcContainer.innerHTML = `<span class="px-2 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/40 text-xs font-bold">MIL: ${currentScannerData.mil_status}</span>` +
+          codes.map(c => `<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-mono font-bold">${c}</span>`).join('');
+      }
+
+      const ranges = (kbData && kbData.vehicle_spec && kbData.vehicle_spec.electronics_and_diagnostics.live_pid_normal_ranges_warm_idle) || {};
+      const labels = {
+        rpm: 'Engine Speed',
+        coolant_temp_c: 'Coolant Temp (ECT)',
+        map_kpa: 'Manifold Pressure (MAP)',
+        iat_c: 'Intake Air Temp (IAT)',
+        tps_percent: 'Throttle Position (TPS)',
+        ignition_advance_deg: 'Ignition Timing',
+        stft_bank1_percent: 'Short Term Fuel Trim',
+        ltft_bank1_percent: 'Long Term Fuel Trim',
+        o2_b1s1_voltage_v: 'O2 Sensor B1S1 (Pre-Cat)',
+        battery_voltage_v: 'Battery / Alternator'
+      };
+
+      const grid = document.getElementById('telemetry-grid');
+      grid.innerHTML = Object.keys(labels).map(k => {
+        const val = currentScannerData.telemetry[k];
+        const spec = ranges[k] || { min: -999, max: 9999, unit: '' };
+        const outOfSpec = val < spec.min || val > spec.max;
+        return `
+          <div class="p-3.5 rounded-xl bg-slate-900/90 border ${outOfSpec ? 'border-red-500/60 bg-red-950/20' : 'border-slate-800'}">
+            <div class="text-[11px] text-slate-400 truncate">${labels[k]}</div>
+            <div class="text-xl font-black mt-1 ${outOfSpec ? 'text-red-400' : 'text-white'} font-mono">
+              ${val} <span class="text-xs font-normal text-slate-400">${spec.unit || ''}</span>
+            </div>
+            <div class="text-[10px] mt-1 ${outOfSpec ? 'text-red-300 font-semibold' : 'text-slate-500'}">
+              OEM Warm Spec: ${spec.min} – ${spec.max} ${spec.unit || ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function connectWebSerialOBD() {
+      if (!('serial' in navigator)) {
+        alert('WebSerial API is supported in Chrome/Edge desktop. Using Backend Serial / Simulator Bridge.');
+        return;
+      }
+      try {
+        const port = await navigator.serial.requestPort();
+        await port.open({ baudRate: 38400 });
+        document.getElementById('connection-text').textContent = 'Live USB/Bluetooth OBD Serial Connected (38400 baud)';
+        document.getElementById('connection-badge').className = 'flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs font-medium';
+      } catch (err) {
+        console.log('User cancelled or port busy:', err);
+      }
+    }
+
+    function transferScannerToAI() {
+      if (currentScannerData) {
+        document.getElementById('diag-dtc-input').value = (currentScannerData.dtc_codes || []).join(', ');
+      }
+      switchTab('diagnostics');
+      runAIDiagnosis();
+    }
+
+    function quickSetDTC(codesStr) {
+      document.getElementById('diag-dtc-input').value = codesStr;
+      currentQAResponses = {};
+      runAIDiagnosis();
+    }
+
+    function answerQuestion(qId, answer) {
+      currentQAResponses[qId] = answer;
+      runAIDiagnosis();
+    }
+
+    async function runAIDiagnosis() {
+      const rawCodes = document.getElementById('diag-dtc-input').value;
+      const dtcCodes = rawCodes.split(',').map(s => s.trim()).filter(Boolean);
+      const checkedSymptoms = Array.from(document.querySelectorAll('#symptom-checkboxes input:checked')).map(el => el.value);
+
+      const res = await fetch('/api/diagnosis/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          dtc_codes: dtcCodes,
+          symptoms: checkedSymptoms,
+          live_telemetry: currentScannerData ? currentScannerData.telemetry : {},
+          qa_responses: currentQAResponses
+        })
+      });
+      const payload = await res.json();
+      const diag = payload.diagnosis;
+
+      const container = document.getElementById('diagnosis-results-container');
+      const corrHtml = diag.multi_dtc_correlation ? `
+        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/40 text-xs space-y-1">
+          <div class="font-bold text-amber-300">🔗 ${diag.multi_dtc_correlation.correlation_title}</div>
+          <div class="text-slate-200 leading-relaxed">${diag.multi_dtc_correlation.explanation}</div>
+        </div>
+      ` : '';
+
+      const causesHtml = (diag.ranked_probable_causes || []).map(c => `
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-200 font-medium"><strong class="text-blue-400">[${c.dtc_code}]</strong> ${c.cause}</span>
+            <span class="font-mono font-bold text-cyan-300">${c.confidence_percent}%</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-blue-500 to-cyan-400" style="width: ${Math.min(100, c.confidence_percent)}%"></div>
+          </div>
+        </div>
+      `).join('');
+
+      const questionsHtml = (diag.interactive_questions || []).map(q => `
+        <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="space-y-1">
+            <div class="text-xs font-semibold text-white">[${q.dtc_code}] ${q.question}</div>
+            <div class="text-[11px] text-slate-400">${q.impact}</div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="answerQuestion('${q.id}', 'yes')" class="px-3 py-1 rounded text-xs font-bold ${q.user_answer === 'yes' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">Yes</button>
+            <button onclick="answerQuestion('${q.id}', 'no')" class="px-3 py-1 rounded text-xs font-bold ${q.user_answer === 'no' ? 'bg-red-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">No</button>
+          </div>
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-400">AI Engineering Diagnostic Verdict</span>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${diag.severity === 'CRITICAL' ? 'bg-red-500/20 text-red-300 border border-red-500/40' : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'}">
+              Severity: ${diag.severity}
+            </span>
+          </div>
+          <p class="text-sm text-slate-200 leading-relaxed">${diag.ai_engineering_summary}</p>
+          ${corrHtml}
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 space-y-3">
+          <h3 class="text-sm font-bold text-white">Probable Root Causes (Bayesian Symptom + Sensor Weighted)</h3>
+          <div class="space-y-3">${causesHtml}</div>
+        </div>
+
+        ${questionsHtml ? `
+        <div class="glass-card rounded-2xl p-5 space-y-3">
+          <h3 class="text-sm font-bold text-cyan-400">Interactive Owner Diagnostic Questions (Click Yes/No to Refine)</h3>
+          <div class="space-y-2.5">${questionsHtml}</div>
+        </div>` : ''}
+      `;
+    }
+
+    function renderDLCConnector() {
+      if (!kbData || !kbData.wiring_data) return;
+      const pins = kbData.wiring_data.dlc_16pin_pinout.pins;
+      const topRow = document.getElementById('dlc-row-top');
+      const botRow = document.getElementById('dlc-row-bottom');
+
+      const renderPinBtn = (p) => {
+        const active = !p.function.startsWith('Unused');
+        return `
+          <button onclick='showDLCPin(${JSON.stringify(p)})' class="dlc-pin p-2 rounded-lg border text-center transition ${active ? 'bg-blue-950/60 border-blue-500/50 text-white' : 'bg-slate-900/40 border-slate-800 text-slate-600'}">
+            <div class="text-xs font-black font-mono">${p.pin}</div>
+            <div class="text-[9px] truncate mt-0.5 ${active ? 'text-cyan-300 font-semibold' : 'text-slate-600'}">${active ? p.wire_color : 'Empty'}</div>
+          </button>
+        `;
+      };
+
+      topRow.innerHTML = pins.slice(0, 8).map(renderPinBtn).join('');
+      botRow.innerHTML = pins.slice(8, 16).map(renderPinBtn).join('');
+    }
+
+    function showDLCPin(p) {
+      document.getElementById('dlc-pin-detail').innerHTML = `
+        <div class="font-bold text-blue-300">DLC Pin ${p.pin} — ${p.function} (Wire: ${p.wire_color})</div>
+        <div class="text-slate-300">Expected Multimeter Reading: <strong>${p.nominal_voltage}</strong></div>
+      `;
+    }
+
+    function renderSelectedCircuit() {
+      if (!kbData || !kbData.wiring_data) return;
+      const cid = document.getElementById('wiring-circuit-select').value;
+      const c = kbData.wiring_data.circuits[cid];
+      if (!c) return;
+
+      const rows = c.pins.map(p => `
+        <tr class="border-b border-slate-800/80">
+          <td class="py-1.5 px-2 font-mono font-bold text-blue-300">Pin ${p.sensor_pin} → ECM ${p.ecm_pin}</td>
+          <td class="py-1.5 px-2 text-white">${p.signal}</td>
+          <td class="py-1.5 px-2 text-amber-300 font-mono">${p.wire_color}</td>
+          <td class="py-1.5 px-2 text-emerald-300 font-mono">${p.expected_idle_v}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('circuit-pin-table').innerHTML = `
+        <div class="text-xs text-slate-400 mb-2">Location: <strong class="text-slate-200">${c.location}</strong> | OEM Part: <strong class="text-cyan-300">MGP ${c.mgp_part}</strong></div>
+        <table class="w-full text-left text-[11px]">
+          <thead>
+            <tr class="border-b border-slate-700 text-slate-400">
+              <th class="py-1 px-2">Terminal</th>
+              <th class="py-1 px-2">Circuit Function</th>
+              <th class="py-1 px-2">Wire Color</th>
+              <th class="py-1 px-2">Expected Warm Idle</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    async function runMultimeterValidation() {
+      const circuit_id = document.getElementById('wiring-circuit-select').value;
+      const mode = document.getElementById('wiring-test-mode').value;
+      const refVal = document.getElementById('mm-ref-v').value;
+      const sigVal = document.getElementById('mm-sig-v').value;
+      const resVal = document.getElementById('mm-res-ohm').value;
+
+      const res = await fetch('/api/diagnosis/multimeter-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          circuit_id,
+          mode,
+          ref_voltage_v: refVal !== '' ? parseFloat(refVal) : null,
+          signal_voltage_v: sigVal !== '' ? parseFloat(sigVal) : null,
+          resistance_ohms: resVal !== '' ? parseFloat(resVal) : null
+        })
+      });
+      const data = await res.json();
+      const box = document.getElementById('multimeter-result-box');
+      box.innerHTML = (data.checks || []).map(chk => `
+        <div class="p-3 rounded-lg border text-xs ${chk.passed ? 'bg-emerald-950/30 border-emerald-500/40 text-emerald-200' : 'bg-red-950/30 border-red-500/40 text-red-200'}">
+          <div class="flex justify-between font-bold">
+            <span>${chk.test}: ${chk.measured} (Spec: ${chk.expected})</span>
+            <span>${chk.passed ? '✓ PASS' : '✗ FAIL'}</span>
+          </div>
+          <div class="text-[11px] mt-1 opacity-90">${chk.diagnosis}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderDIYProcedures() {
+      if (!kbData || !kbData.procedures) return;
+      const list = document.getElementById('diy-procedures-list');
+      list.innerHTML = Object.values(kbData.procedures).map(proc => `
+        <div class="p-5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <span class="text-[11px] font-mono text-blue-400">${proc.id} • Codes: ${proc.related_dtcs.join(', ')}</span>
+              <h3 class="text-sm font-bold text-white mt-0.5">${proc.title}</h3>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[11px] shrink-0">⏱ ${proc.estimated_time_mins} mins</span>
+          </div>
+
+          <div class="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-200 space-y-1">
+            ${proc.safety_warnings.map(w => `<div>⚠️ ${w}</div>`).join('')}
+          </div>
+
+          <div class="space-y-2 text-xs">
+            ${proc.steps.map(s => `
+              <div class="p-2.5 rounded bg-slate-950/70 border border-slate-800/80">
+                <div class="font-bold text-cyan-300">Step ${s.step}: ${s.title} ${s.torque_spec_nm ? `<span class="text-amber-300 font-mono">(${s.torque_spec_nm} Nm)</span>` : ''}</div>
+                <div class="text-slate-300 mt-0.5 text-[11px] leading-relaxed">${s.instruction}</div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="pt-2 border-t border-slate-800 flex flex-wrap gap-2">
+            ${proc.oem_parts.map(pt => `
+              <span class="px-2.5 py-1 rounded bg-blue-950/50 border border-blue-500/30 text-[11px] text-blue-200">
+                🔧 <strong>${pt.name}</strong> — MGP #<code>${pt.mgp_part_number}</code> (~₹${pt.approx_price_inr})
+              </span>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function submitRepairVerification() {
+      const desc = document.getElementById('rep-desc').value;
+      const beforeDtc = document.getElementById('rep-before-dtc').value.split(',').map(s => s.trim()).filter(Boolean);
+      const afterDtc = document.getElementById('rep-after-dtc').value.split(',').map(s => s.trim()).filter(Boolean);
+
+      const before_test = {
+        dtc_codes: beforeDtc,
+        rpm: parseFloat(document.getElementById('rep-before-rpm').value),
+        map_kpa: parseFloat(document.getElementById('rep-before-map').value),
+        stft_bank1_percent: parseFloat(document.getElementById('rep-before-stft').value)
+      };
+      const after_test = {
+        dtc_codes: afterDtc,
+        rpm: parseFloat(document.getElementById('rep-after-rpm').value),
+        map_kpa: parseFloat(document.getElementById('rep-after-map').value),
+        stft_bank1_percent: parseFloat(document.getElementById('rep-after-stft').value)
+      };
+
+      await fetch('/api/reports', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          repair_description: desc,
+          replaced_parts: [{ name: 'MGP Verified Component', mgp_part_number: '18590-68K00 / 09280-10016' }],
+          before_test,
+          after_test
+        })
+      });
+      await loadRepairReports();
+    }
+
+    async function loadRepairReports() {
+      const res = await fetch('/api/reports');
+      const reports = await res.json();
+      const container = document.getElementById('repair-reports-list');
+      container.innerHTML = reports.map(r => {
+        const vr = r.verification_report || {};
+        const comps = (vr.parameter_comparisons || []).map(c => `
+          <span class="px-2 py-1 rounded bg-slate-950 border border-slate-800 text-[11px] font-mono">
+            ${c.parameter}: <span class="text-red-300">${c.before_value}</span> → <span class="text-emerald-300 font-bold">${c.after_value} ${c.unit}</span>
+          </span>
+        `).join('');
+        return `
+          <div class="glass-card rounded-xl p-4 border ${r.verified ? 'border-emerald-500/40' : 'border-amber-500/40'} space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${r.verified ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'}">
+                ${r.verified ? '✓ VERIFIED REPAIR CERTIFICATE' : '⚠ PARTIAL / UNVERIFIED'}
+              </span>
+              <span class="text-[11px] text-slate-400 font-mono">${r.created_at ? new Date(r.created_at).toLocaleString() : ''}</span>
+            </div>
+            <p class="text-xs text-white font-medium">${r.repair_description}</p>
+            <div class="text-[11px] text-cyan-300">${vr.engineering_verdict || ''}</div>
+            <div class="flex flex-wrap gap-2 pt-1">${comps}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>

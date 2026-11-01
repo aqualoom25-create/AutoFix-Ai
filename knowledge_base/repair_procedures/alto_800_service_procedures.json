@@ -1,0 +1,393 @@
+{
+  "vehicle": "Maruti Suzuki Alto 800 (2013, 0.8L F8D MPFI Petrol)",
+  "procedures": {
+    "PROC-ALTO800-MAP-01": {
+      "id": "PROC-ALTO800-MAP-01",
+      "title": "MAP/IAT Sensor Inspection, Cleaning & Replacement (F8D Intake Manifold)",
+      "related_dtcs": ["P0105", "P0107", "P0108", "P0110"],
+      "difficulty": "Beginner / DIY Friendly",
+      "estimated_time_mins": 25,
+      "safety_warnings": [
+        "Ensure ignition key is OFF and remove negative (-) battery terminal before unplugging ECM sensors.",
+        "NEVER poke a wire or pin into the MAP sensor sensing hole — it will permanently rupture the silicon pressure diaphragm.",
+        "Use only plastic-safe Mass Air Flow / Electronic Contact Cleaner spray (never brake cleaner or carburetor cleaner on the MAP sensor)."
+      ],
+      "tools_required": [
+        "10mm Socket & Ratchet",
+        "Phillips #2 Screwdriver",
+        "Digital Multimeter (20V DC scale)",
+        "Electronic Contact / MAF Sensor Cleaner Spray"
+      ],
+      "oem_parts": [
+        { "name": "Sensor Assy, Manifold Absolute Pressure (MAP/IAT)", "mgp_part_number": "18590-68K00", "approx_price_inr": 1480 },
+        { "name": "O-Ring, MAP Sensor Seal", "mgp_part_number": "09280-10016", "approx_price_inr": 45 }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Remove Air Cleaner Housing Assembly",
+          "instruction": "Loosen the air intake resonator clamp and remove the two 10mm mounting bolts holding the black air filter housing on top of the F8D throttle body.",
+          "torque_spec_nm": 9
+        },
+        {
+          "step": 2,
+          "title": "Locate & Back-Probe 4-Pin MAP Sensor Connector",
+          "instruction": "Locate the 4-pin sensor mounted on top of the intake manifold plenum. With Ignition ON (Engine OFF), measure Pin 3 (Red/Blue) to Pin 2 (Brown/White): verify 4.85 - 5.15V. Measure Pin 4 (Light Green/Red) signal: verify 3.85 - 4.25V at atmospheric pressure.",
+          "torque_spec_nm": null
+        },
+        {
+          "step": 3,
+          "title": "Remove & Inspect MAP Sensor and O-Ring",
+          "instruction": "Unplug the 4-pin harness clip, remove the single 10mm retaining bolt, and gently wiggle the MAP sensor straight up. Inspect the rubber O-ring for cracks and check the manifold port for engine oil blow-by sludge.",
+          "torque_spec_nm": 6
+        },
+        {
+          "step": 4,
+          "title": "Clean or Replace Sensor & Verify Live Manifold Vacuum",
+          "instruction": "Spray electronic cleaner lightly to remove oil film and let air dry for 10 minutes, or install new MGP 18590-68K00 sensor lubricated with a drop of clean engine oil on the O-ring. Reinstall, clear DTCs, start engine, and verify warm idle MAP reads 28 - 36 kPa.",
+          "torque_spec_nm": 6
+        }
+      ],
+      "verification_criteria": {
+        "dtc_cleared": true,
+        "target_pid_checks": {
+          "map_kpa": { "min": 27, "max": 38 },
+          "rpm": { "min": 750, "max": 850 },
+          "stft_bank1_percent": { "min": -8.0, "max": 8.0 }
+        }
+      }
+    },
+    "PROC-ALTO800-ECT-01": {
+      "id": "PROC-ALTO800-ECT-01",
+      "title": "Engine Coolant Temperature (ECT) Sensor Testing & Replacement",
+      "related_dtcs": ["P0115", "P0117", "P0118"],
+      "difficulty": "Intermediate DIY",
+      "estimated_time_mins": 35,
+      "safety_warnings": [
+        "DANGER BURN HAZARD: Never open the radiator cap or unscrew the ECT sensor when the engine is hot or pressurized. Allow engine to cool below 35°C.",
+        "Keep coolant away from the alternator and battery wiring."
+      ],
+      "tools_required": [
+        "19mm Deep Socket or Box Wrench",
+        "Digital Multimeter (Ohms Ω and 20V DC)",
+        "Clean Drain Pan & Premixed 50/50 Ethylene Glycol Coolant (Golden/Green)"
+      ],
+      "oem_parts": [
+        { "name": "Gauge Assy, Water Temperature (ECT Sensor)", "mgp_part_number": "13650-78G00", "approx_price_inr": 395 },
+        { "name": "Thermostat Assy (88°C)", "mgp_part_number": "17670-65G00", "approx_price_inr": 420 }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Relieve Cooling System Pressure (Cold Engine)",
+          "instruction": "With the engine completely cold, slowly twist the radiator pressure cap to the first stop to release any residual pressure, then close it back so vacuum slows coolant loss during sensor swap.",
+          "torque_spec_nm": null
+        },
+        {
+          "step": 2,
+          "title": "Measure ECT Sensor Thermistor Resistance",
+          "instruction": "Unplug the 2-pin connector on the thermostat housing below the ignition coils. Measure resistance across the two brass sensor pins: should be 2,200 - 2,700 Ω at 20°C (or ~1,600 - 2,000 Ω at 30°C Indian ambient). If infinite (open) or < 100 Ω (short), replace sensor.",
+          "torque_spec_nm": null
+        },
+        {
+          "step": 3,
+          "title": "Replace ECT Sensor & Bleed Cooling Air",
+          "instruction": "Unscrew the old ECT sensor with a 19mm deep socket while holding the new MGP 13650-78G00 sensor ready to thread in immediately to minimize coolant loss. Tighten to 15 Nm. Top up radiator coolant, bleed air at idle until radiator fan cycles ON at 98°C and OFF at 93°C.",
+          "torque_spec_nm": 15
+        }
+      ],
+      "verification_criteria": {
+        "dtc_cleared": true,
+        "target_pid_checks": {
+          "coolant_temp_c": { "min": 85, "max": 98 },
+          "rpm": { "min": 750, "max": 850 }
+        }
+      }
+    },
+    "PROC-ALTO800-TPS-01": {
+      "id": "PROC-ALTO800-TPS-01",
+      "title": "Throttle Body Cleaning & TPS Voltage Calibration",
+      "related_dtcs": ["P0120", "P0122", "P0123"],
+      "difficulty": "Intermediate DIY",
+      "estimated_time_mins": 40,
+      "safety_warnings": [
+        "Do not spray throttle cleaner directly into the TPS electrical connector.",
+        "Ensure accelerator cable retains 2-4 mm free-play deflection at idle stop."
+      ],
+      "tools_required": [
+        "Throttle Body Cleaner Spray & Lint-free Microfiber Cloth",
+        "Phillips Screwdriver / Torx T20 Bit",
+        "Digital Multimeter"
+      ],
+      "oem_parts": [
+        { "name": "Sensor Assy, Throttle Position (TPS)", "mgp_part_number": "13420-79G00", "approx_price_inr": 1150 },
+        { "name": "Gasket, Throttle Body", "mgp_part_number": "13421-68K00", "approx_price_inr": 65 }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Clean Throttle Bore & Butterfly Plate Edge",
+          "instruction": "Remove air cleaner box. Apply throttle body cleaner to a cloth and wipe dark carbon deposits from the brass throttle butterfly plate and throat bore.",
+          "torque_spec_nm": null
+        },
+        {
+          "step": 2,
+          "title": "Perform TPS Voltage Sweep Test",
+          "instruction": "With Ignition ON (Engine OFF), back-probe TPS Pin 2 (Yellow/Green) to Pin 3 (Brown/White). Verify closed throttle reads 0.50 ± 0.08 V and smoothly rises without drops or spikes to ~4.3 V at Wide Open Throttle.",
+          "torque_spec_nm": 3
+        }
+      ],
+      "verification_criteria": {
+        "dtc_cleared": true,
+        "target_pid_checks": {
+          "tps_percent": { "min": 0.0, "max": 1.5 },
+          "rpm": { "min": 750, "max": 850 }
+        }
+      }
+    },
+    "PROC-ALTO800-IGN-01": {
+      "id": "PROC-ALTO800-IGN-01",
+      "title": "F8D 3-Cylinder Spark Plug, Ignition Coil & Compression Diagnostic Procedure",
+      "related_dtcs": ["P0300", "P0301", "P0302", "P0303", "P0351", "P0352", "P0353"],
+      "difficulty": "Beginner / Intermediate DIY",
+      "estimated_time_mins": 45,
+      "safety_warnings": [
+        "HIGH VOLTAGE HAZARD (30,000V): Never pull spark plug boots while the engine is running.",
+        "Unplug the 3 fuel injectors before cranking the engine for a compression test so raw petrol is not sprayed into the cylinders."
+      ],
+      "tools_required": [
+        "16mm Magnetic Spark Plug Socket + 150mm Extension + Torque Wrench",
+        "Wire Feeler Gauge (0.8 - 0.9 mm)",
+        "10mm Socket",
+        "Cylinder Compression Tester (M12x1.25 thread adapter)"
+      ],
+      "oem_parts": [
+        { "name": "Spark Plug Set (3 pcs) NGK DCPR7E", "mgp_part_number": "09482-00494", "approx_price_inr": 420 },
+        { "name": "Coil Assy, Ignition", "mgp_part_number": "33400-68K00", "approx_price_inr": 1650 },
+        { "name": "Cord Set, High Tension Spark Plug", "mgp_part_number": "33705-68K00", "approx_price_inr": 680 }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Inspect & Gap All 3 Spark Plugs (Cyl 1, 2, 3)",
+          "instruction": "Remove air cleaner assembly. Pull the ignition coil boots/leads for Cylinders 1 (timing belt side), 2 (center), and 3 (gearbox side). Remove plugs using a 16mm socket. Check electrode condition and set gap to 0.8 - 0.9 mm.",
+          "torque_spec_nm": 18
+        },
+        {
+          "step": 2,
+          "title": "Test Ignition Coil Primary & Secondary Resistance",
+          "instruction": "Measure primary coil resistance (0.5 - 1.5 Ω) and inspect rubber boots for white carbon tracking lines that leak spark to the cylinder head wall.",
+          "torque_spec_nm": 8
+        },
+        {
+          "step": 3,
+          "title": "Perform Dry Compression Test (If Misfire Persists)",
+          "instruction": "Unplug all 3 fuel injectors, hold throttle wide open, and crank 5 compression strokes per cylinder. Standard: 14.0 bar (203 psi), Minimum limit: 11.5 bar (167 psi), Max difference between cylinders: 1.0 bar.",
+          "torque_spec_nm": 18
+        }
+      ],
+      "verification_criteria": {
+        "dtc_cleared": true,
+        "target_pid_checks": {
+          "rpm": { "min": 750, "max": 850 },
+          "map_kpa": { "min": 27, "max": 38 },
+          "stft_bank1_percent": { "min": -8.0, "max": 8.0 }
+        }
+      }
+    },
+    "PROC-ALTO800-CKP-01": {
+      "id": "PROC-ALTO800-CKP-01",
+      "title": "Crankshaft Position Sensor (CKP) Testing & Replacement",
+      "related_dtcs": ["P0335", "P0336"],
+      "difficulty": "Intermediate DIY",
+      "estimated_time_mins": 30,
+      "safety_warnings": [
+        "Chock rear wheels and support vehicle on jack stands before working under the front right splash shield.",
+        "Ensure ignition is OFF and key removed."
+      ],
+      "tools_required": [
+        "10mm Socket & Ratchet",
+        "Digital Multimeter (Ohms & AC Volts)"
+      ],
+      "oem_parts": [
+        { "name": "Sensor Assy, Crankshaft Position (CKP)", "mgp_part_number": "33220-76G30", "approx_price_inr": 890 }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Measure CKP Coil Resistance (Cold vs Hot)",
+          "instruction": "Unplug CKP sensor connector. Measure resistance between Pin 1 and Pin 2: specification is 480 - 650 Ω at 20°C. If it reads open circuit (OL) when hot, the sensor winding has failed thermally.",
+          "torque_spec_nm": null
+        },
+        {
+          "step": 2,
+          "title": "Clean Reluctor Tip & Replace Sensor",
+          "instruction": "Remove the 10mm bolt securing the CKP sensor, wipe metallic debris off the magnetic tip, install new MGP 33220-76G30 sensor, and torque bolt to 9 Nm. Verify air gap to toothed wheel is 0.5 - 1.2 mm.",
+          "torque_spec_nm": 9
+        }
+      ],
+      "verification_criteria": {
+        "dtc_cleared": true,
+        "target_pid_checks": {
+          "rpm": { "min": 750, "max": 850 }
+        }
+      }
+    },
+    "PROC-ALTO800-IACV-01": {
+      "id": "PROC-ALTO800-IACV-01",
+      "title": "Idle Air Control Valve (IACV) Cleaning, Coil Test & Idle Relearn",
+      "related_dtcs": ["P0505", "P0506", "P0507"],
+      "difficulty": "Intermediate DIY",
+      "estimated_time_mins": 45,
+      "safety_warnings": [
+        "Do NOT manually push or pull the IACV stepper pintle cone by hand — this strips the internal plastic worm gear.",
+        "Use a properly fitting Phillips #2 screwdriver (JIS) so the soft IACV mounting screws do not strip."
+      ],
+      "tools_required": [
+        "JIS #2 Phillips Screwdriver",
+        "Throttle Body / Carburetor Cleaner (for metal bypass port only)",
+        "Digital Multimeter"
+      ],
+      "oem_parts": [
+        { "name": "Valve Assy, Idle Air Control (IACV)", "mgp_part_number": "18137-79G01", "approx_price_inr": 2450 }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Remove IACV & Clean Carbon from Bypass Seat",
+          "instruction": "Unbolt the IACV from the bottom of the throttle body. Clean black carbon soot from the pintle tip and the throttle body air bypass channel using a cotton swab and cleaner.",
+          "torque_spec_nm": 3.5
+        },
+        {
+          "step": 2,
+          "title": "Perform Suzuki F8D ECM Idle Speed Relearn Procedure",
+          "instruction": "1) Reconnect battery. 2) Turn Ignition ON (do not crank) for 15 seconds so ECM resets IACV stepper to home position. 3) Turn Ignition OFF for 10 seconds. 4) Start engine with all loads (A/C, headlights, blower) OFF and let warm up to 90°C (fan cycles once). 5) Idle for 5 minutes until RPM stabilizes at 800 ± 50 RPM.",
+          "torque_spec_nm": null
+        }
+      ],
+      "verification_criteria": {
+        "dtc_cleared": true,
+        "target_pid_checks": {
+          "rpm": { "min": 750, "max": 850 },
+          "map_kpa": { "min": 27, "max": 38 }
+        }
+      }
+    },
+    "PROC-ALTO800-O2S-01": {
+      "id": "PROC-ALTO800-O2S-01",
+      "title": "Upstream Oxygen Sensor (HO2S-1) Heater & Signal Verification",
+      "related_dtcs": ["P0130", "P0131", "P0132", "P0133", "P0134", "P0135"],
+      "difficulty": "Intermediate DIY",
+      "estimated_time_mins": 30,
+      "safety_warnings": [
+        "Exhaust manifold reaches > 500°C. Wait until exhaust manifold is cool before touching.",
+        "Apply anti-seize compound ONLY to sensor threads, never on the slotted sensor tip."
+      ],
+      "tools_required": [
+        "22mm Slotted Oxygen Sensor Socket & Breaker Bar",
+        "Digital Multimeter"
+      ],
+      "oem_parts": [
+        { "name": "Sensor, Heated Oxygen (Pre-Cat B1S1)", "mgp_part_number": "18213-68K00", "approx_price_inr": 2690 }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Test O2 Sensor Heater Coil Resistance",
+          "instruction": "Unplug the 4-pin O2 sensor connector in front of the engine. Measure resistance between the two White heater wires on the sensor side: must be 5.0 - 9.5 Ω at 20°C.",
+          "torque_spec_nm": null
+        },
+        {
+          "step": 2,
+          "title": "Replace O2 Sensor & Verify Closed-Loop Switching",
+          "instruction": "Unscrew sensor with 22mm O2 socket, thread in new MGP 18213-68K00 sensor, and torque to 45 Nm. Warm engine to 85°C+ and verify O2 B1S1 voltage switches rapidly between 0.15V and 0.85V.",
+          "torque_spec_nm": 45
+        }
+      ],
+      "verification_criteria": {
+        "dtc_cleared": true,
+        "target_pid_checks": {
+          "o2_b1s1_voltage_v": { "min": 0.1, "max": 0.9 },
+          "stft_bank1_percent": { "min": -8.0, "max": 8.0 }
+        }
+      }
+    },
+    "PROC-ALTO800-FUEL-01": {
+      "id": "PROC-ALTO800-FUEL-01",
+      "title": "F8D Intake Vacuum Leak Smoke/Spray Check & Fuel Rail Pressure Test",
+      "related_dtcs": ["P0171", "P0172"],
+      "difficulty": "Intermediate DIY",
+      "estimated_time_mins": 45,
+      "safety_warnings": [
+        "FIRE HAZARD: Relieve fuel rail pressure before disconnecting quick-connect fuel lines. Keep a Class B fire extinguisher nearby."
+      ],
+      "tools_required": [
+        "Fuel Pressure Gauge Kit (0 - 7 bar)",
+        "Digital Multimeter"
+      ],
+      "oem_parts": [
+        { "name": "Injector Assy, Fuel (F8D)", "mgp_part_number": "15710-68K00", "approx_price_inr": 1590 },
+        { "name": "Valve, PCV (Positive Crankcase Ventilation)", "mgp_part_number": "18118-78G50", "approx_price_inr": 240 }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Inspect PCV Hose & Brake Booster Vacuum Line",
+          "instruction": "Inspect the rubber hose between the cylinder head cover PCV valve and intake manifold, as well as the brake booster vacuum hose for splits or hardened ends.",
+          "torque_spec_nm": null
+        },
+        {
+          "step": 2,
+          "title": "Verify Fuel Pump Pressure & Injector Resistance",
+          "instruction": "Connect fuel pressure gauge inline: verify 3.5 bar (350 kPa) with key ON / engine running. Measure all 3 fuel injectors: each should read 11.5 - 13.5 Ω at 20°C.",
+          "torque_spec_nm": 22
+        }
+      ],
+      "verification_criteria": {
+        "dtc_cleared": true,
+        "target_pid_checks": {
+          "stft_bank1_percent": { "min": -8.0, "max": 8.0 },
+          "ltft_bank1_percent": { "min": -10.0, "max": 10.0 },
+          "map_kpa": { "min": 27, "max": 38 }
+        }
+      }
+    },
+    "PROC-ALTO800-VSS-01": {
+      "id": "PROC-ALTO800-VSS-01",
+      "title": "Vehicle Speed Sensor (VSS) Gearbox Circuit & Driven Gear Inspection",
+      "related_dtcs": ["P0500"],
+      "difficulty": "Intermediate DIY",
+      "estimated_time_mins": 35,
+      "safety_warnings": [
+        "Support vehicle securely on jack stands if rotating a front wheel off the ground."
+      ],
+      "tools_required": [
+        "10mm Socket with Long Extension",
+        "Digital Multimeter"
+      ],
+      "oem_parts": [
+        { "name": "Sensor Assy, Speed (VSS 5MT Gearbox)", "mgp_part_number": "34960-68K00", "approx_price_inr": 780 }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Verify 12V Power & Ground at 3-Pin Gearbox VSS Plug",
+          "instruction": "Reach behind the 5-speed transaxle differential housing. Unplug the 3-pin VSS connector and verify 12V Ignition power on Pin 1 and < 0.1V Ground on Pin 2.",
+          "torque_spec_nm": null
+        },
+        {
+          "step": 2,
+          "title": "Inspect Plastic Driven Gear Teeth & Replace VSS",
+          "instruction": "Remove the 10mm bolt, pull the VSS assembly upward out of the gearbox, inspect the nylon gear teeth for wear, and install new MGP 34960-68K00 sensor.",
+          "torque_spec_nm": 9
+        }
+      ],
+      "verification_criteria": {
+        "dtc_cleared": true,
+        "target_pid_checks": {
+          "rpm": { "min": 750, "max": 850 }
+        }
+      }
+    }
+  }
+}

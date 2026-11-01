@@ -1,0 +1,125 @@
+{
+  "vehicle_id": "maruti-alto-800-2013-petrol",
+  "brand": "Maruti Suzuki",
+  "model": "Alto 800",
+  "year": 2013,
+  "generation": "Type 1 (FB308)",
+  "variants": ["Std", "LX", "LXi", "VXi"],
+  "fuel_type": "Petrol",
+  "emission_standard": "BS-IV (Bharat Stage IV)",
+  "engine": {
+    "code": "F8D",
+    "type": "3-Cylinder, 12-Valve, SOHC, MPFI (Multi-Point Fuel Injection)",
+    "displacement_cc": 796,
+    "bore_mm": 68.5,
+    "stroke_mm": 72.0,
+    "compression_ratio": "10.0:1",
+    "compression_pressure_spec_bar": {
+      "standard": 14.0,
+      "minimum_limit": 11.5,
+      "max_diff_between_cylinders": 1.0
+    },
+    "max_power": "35.3 kW (47.3 bhp) @ 6000 RPM",
+    "max_torque": "69 Nm @ 3500 RPM",
+    "firing_order": "1 - 3 - 2 (Cylinder 1 at timing belt end)",
+    "idle_rpm": {
+      "ac_off": "800 ± 50 RPM",
+      "ac_on": "900 ± 50 RPM"
+    },
+    "valve_clearance_cold_mm": {
+      "intake": "0.13 - 0.17 mm",
+      "exhaust": "0.23 - 0.27 mm"
+    },
+    "spark_plug": {
+      "oem_model": "NGK DCPR7E / BOSCH YR7DC",
+      "mgp_part_number": "09482-00494",
+      "gap_mm": "0.8 - 0.9 mm",
+      "tightening_torque_nm": 18
+    },
+    "fuel_system": {
+      "type": "Returnless MPFI with In-Tank Electric Fuel Pump",
+      "operating_pressure_bar": 3.5,
+      "operating_pressure_kpa": 350,
+      "hold_pressure_after_1_min_bar": 2.5,
+      "injector_resistance_ohms_at_20c": "11.5 - 13.5"
+    },
+    "lubrication_and_cooling": {
+      "engine_oil_grade": "SAE 5W-30 API SL/SM/SN",
+      "engine_oil_capacity_liters": 2.7,
+      "coolant_capacity_liters": 4.0,
+      "thermostat_opening_temp_c": 88,
+      "radiator_fan_on_temp_c": 98,
+      "radiator_fan_off_temp_c": 93
+    }
+  },
+  "transmission": {
+    "type": "5-Speed Manual (5MT) Cable-Shift",
+    "gear_oil_grade": "SAE 75W-90 API GL-4",
+    "gear_oil_capacity_liters": 2.1
+  },
+  "electronics_and_diagnostics": {
+    "ecm_manufacturers": [
+      "Bosch ME17.9.71 (BS-IV)",
+      "Continental / Siemens SIMK-310 / Delphi MT22.1 (Variant Specific)"
+    ],
+    "dlc_connector": {
+      "type": "Standard 16-Pin SAE J1962 OBD-II Female Connector",
+      "location": "Under driver-side instrument panel (dashboard), lower right side near steering column / fuse box",
+      "populated_pins": {
+        "4": "Chassis Ground (CGND) - Black",
+        "5": "Signal Ground (SGND) - Black/Orange",
+        "6": "CAN High (ISO 15765-4, 500 kbps) - White/Red",
+        "7": "K-Line (ISO 14230-4 KWP2000 ECM/Immobilizer/EPS) - Purple/Yellow",
+        "14": "CAN Low (ISO 15765-4, 500 kbps) - White",
+        "16": "Battery Positive (+12V Unswitched via 10A OBDC/Dome Fuse) - White/Black"
+      }
+    },
+    "supported_protocols": [
+      {
+        "protocol_id": "ISO_14230_4_KWP_FAST",
+        "name": "ISO 14230-4 KWP2000 (Fast Init - 10.4 kbps)",
+        "elm327_command": "ATSP 5",
+        "physical_pin": 7,
+        "ecu_target_address": "10",
+        "tester_source_address": "F1",
+        "header_bytes": "81 10 F1",
+        "notes": "Primary diagnostic protocol on early 2013 Alto 800 F8D ECMs and EPS/Immobilizer modules."
+      },
+      {
+        "protocol_id": "ISO_15765_4_CAN_11BIT_500K",
+        "name": "ISO 15765-4 CAN (11-bit ID, 500 kbaud)",
+        "elm327_command": "ATSP 6",
+        "physical_pins": [6, 14],
+        "ecu_request_id": "7E0",
+        "ecu_response_id": "7E8",
+        "notes": "Supported on BS-IV Bosch ME17.9.71 equipped 2013 Alto 800 units."
+      },
+      {
+        "protocol_id": "ISO_9141_2",
+        "name": "ISO 9141-2 (5-Baud Init - 10.4 kbps)",
+        "elm327_command": "ATSP 3",
+        "physical_pin": 7,
+        "notes": "Fallback protocol for legacy MB308 Maruti 800 and older Suzuki K-Line ECUs."
+      }
+    ],
+    "live_pid_normal_ranges_warm_idle": {
+      "rpm": { "min": 750, "max": 850, "unit": "RPM", "pid": "010C" },
+      "coolant_temp_c": { "min": 85, "max": 98, "unit": "°C", "pid": "0105" },
+      "map_kpa": { "min": 27, "max": 38, "unit": "kPa", "pid": "010B" },
+      "iat_c": { "min": 25, "max": 55, "unit": "°C", "pid": "010F" },
+      "tps_percent": { "min": 0.0, "max": 1.5, "unit": "%", "pid": "0111" },
+      "tps_voltage_v": { "min": 0.45, "max": 0.65, "unit": "V", "pid": "CUSTOM_TPS_V" },
+      "ignition_advance_deg": { "min": 5, "max": 15, "unit": "° BTDC", "pid": "010E" },
+      "calc_engine_load_percent": { "min": 14, "max": 26, "unit": "%", "pid": "0104" },
+      "stft_bank1_percent": { "min": -8.0, "max": 8.0, "unit": "%", "pid": "0106" },
+      "ltft_bank1_percent": { "min": -10.0, "max": 10.0, "unit": "%", "pid": "0107" },
+      "o2_b1s1_voltage_v": { "min": 0.1, "max": 0.9, "unit": "V (Oscillating)", "pid": "0114" },
+      "o2_b1s2_voltage_v": { "min": 0.6, "max": 0.8, "unit": "V (Steady)", "pid": "0115" },
+      "battery_voltage_v": { "min": 13.6, "max": 14.5, "unit": "V", "pid": "0142" },
+      "vehicle_speed_kmh": { "min": 0, "max": 0, "unit": "km/h", "pid": "010D" }
+    }
+  },
+  "legacy_comparison_note": {
+    "maruti_800_mb308": "The classic Maruti 800 (MB308, F8B 6-valve / Euro-III MPFI) used a 3-valve-per-cylinder F8B engine and Suzuki proprietary K-Line / flash-code diagnostics, whereas the 2013 Alto 800 (FB308) uses the 12-valve F8D engine with BS-IV OBD-II 16-pin DLC."
+  }
+}

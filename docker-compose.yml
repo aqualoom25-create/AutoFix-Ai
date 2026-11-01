@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: autofix-ai-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: autofix
+      POSTGRES_PASSWORD: autofix_password
+      POSTGRES_DB: autofix_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - autofix_pgdata:/var/lib/postgresql/data
+      - ./backend/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: autofix-ai-saas
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: postgresql://autofix:autofix_password@db:5432/autofix_ai
+    depends_on:
+      - db
+
+volumes:
+  autofix_pgdata:
