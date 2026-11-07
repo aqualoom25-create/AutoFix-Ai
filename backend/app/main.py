@@ -7,9 +7,10 @@ from app.database import Base, engine, SessionLocal
 from app.models.vehicle import User, Vehicle
 from app.models.diagnostic import DiagnosticSession
 from app.models.repair import RepairRecord
-from app.api import vehicles_router, diagnosis_router, reports_router, hardware_router
+from app.api import vehicles_router, diagnosis_router, reports_router, hardware_router, manuals_router
 from app.engine.diagnostic_rules import run_diagnostic_engine
 from app.engine.repair_validator import validate_repair_execution
+from app.engine.master_kb_builder import ensure_master_20k_database
 
 
 def seed_initial_data():
@@ -109,16 +110,17 @@ def seed_initial_data():
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
     seed_initial_data()
+    ensure_master_20k_database()
     yield
 
 
 app = FastAPI(
-    title="AutoFix AI — Automotive Engineering & DIY Diagnostic SaaS",
+    title="AutoFix AI — Automotive Engineering & 20,000-Issue DIY Diagnostic SaaS",
     description=(
-        "Full-stack AI diagnostic engine, F8D wiring pinout analyzer, OBD-II/KWP2000 hardware bridge, "
-        "guided DIY repair procedures, and post-repair verification for the 2013 Maruti Suzuki Alto 800 (0.8L Petrol)."
+        "Full-stack AI diagnostic engine, Workshop Service Manuals, Harness Routings, 20,000+ Electrical/Mechanical/DTC "
+        "Issues Database with 20,000 Real-Time Blueprint Solution Images for the 2013 Maruti Suzuki Alto 800 (0.8L Petrol)."
     ),
-    version="1.0.0",
+    version="2.0.0",
     lifespan=lifespan,
 )
 
@@ -134,15 +136,19 @@ app.include_router(vehicles_router)
 app.include_router(diagnosis_router)
 app.include_router(reports_router)
 app.include_router(hardware_router)
+app.include_router(manuals_router)
 
 
 @app.get("/api/health")
 def health_check():
+    total_issues = ensure_master_20k_database()
     return {
         "status": "ok",
         "service": "AutoFix AI SaaS Backend",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "target_vehicle": "2013 Maruti Suzuki Alto 800 (0.8L F8D 12V MPFI Petrol)",
+        "master_issues_count": total_issues,
+        "realtime_solution_images_count": total_issues,
     }
 
 

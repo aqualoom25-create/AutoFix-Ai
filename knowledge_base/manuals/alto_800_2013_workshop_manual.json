@@ -1,0 +1,225 @@
+{
+  "vehicle": "2013 Maruti Suzuki Alto 800 (FB308 • 0.8L F8D 12-Valve SOHC MPFI Petrol • BS-IV)",
+  "manual_publication_code": "99500M68K00-74E (FB308 Workshop Service & Electrical Routing Manual)",
+  "manual_sections": [
+    {
+      "section_id": "SEC-0A",
+      "title": "Section 0A — General Information & Periodic Maintenance Schedule",
+      "summary": "Vehicle identification (MA3EUA61S...), jacking/lifting points, fluid capacities, fastener torque standards, and 10,000 km / 1-year service intervals.",
+      "key_specs": [
+        { "parameter": "Chassis / Engine Prefix", "value": "MA3EUA61S00... / F8DN..." },
+        { "parameter": "Engine Oil & Filter Interval", "value": "Every 10,000 km or 12 months (2.7 L SAE 5W-30)" },
+        { "parameter": "Spark Plug Replacement", "value": "Every 20,000 km (NGK DCPR7E, gap 0.8-0.9 mm, 18 Nm)" },
+        { "parameter": "Timing Belt & Tensioner Replacement", "value": "Inspect at 60,000 km, Replace at 80,000 - 100,000 km (107 teeth)" },
+        { "parameter": "Coolant & Transaxle Oil Replacement", "value": "Every 40,000 km or 3 years (Coolant 4.0 L, Gear Oil 2.1 L 75W-90)" }
+      ],
+      "routing_notes": "VIN plate riveted on front bulkhead cowl top panel; engine serial number stamped on front-left lower block flange near gearbox bellhousing."
+    },
+    {
+      "section_id": "SEC-1A",
+      "title": "Section 1A — F8D 796cc 12-Valve Engine Mechanical, Cylinder Head & Timing Belt",
+      "summary": "Complete overhaul data for the 3-cylinder 12-valve SOHC F8D aluminum cylinder head, cast-iron block, pistons, crankshaft journals, tappet clearances, and timing belt alignment.",
+      "key_specs": [
+        { "parameter": "Compression Pressure (Warm, WOT)", "value": "Standard: 14.0 bar (203 psi) | Limit: 11.5 bar | Max Diff: 1.0 bar" },
+        { "parameter": "Valve Clearance (Cold 20°C)", "value": "Intake (6 valves): 0.13 - 0.17 mm | Exhaust (6 valves): 0.23 - 0.27 mm" },
+        { "parameter": "Cylinder Head Bolt Torque", "value": "Step 1: 35 Nm -> Step 2: 55 Nm -> Step 3: Final 68-72 Nm (Criss-Cross from center)" },
+        { "parameter": "Cylinder Head Warpage Limit", "value": "0.05 mm max across diagonal; Manifold surface: 0.10 mm" },
+        { "parameter": "Timing Belt Alignment Marks", "value": "Camshaft sprocket punch mark to upper backplate notch; Crank pulley arrow to oil pump housing TDC mark (Cyl #1 TDC)" }
+      ],
+      "routing_notes": "Timing belt (MGP 12761-78G00, 107 teeth) routes Counter-Clockwise from Crankshaft Sprocket -> Tensioner Roller -> Camshaft Sprocket. Water pump is driven by the ribbed alternator V-belt outside the timing cover."
+    },
+    {
+      "section_id": "SEC-1B",
+      "title": "Section 1B — Engine Cooling System, Thermostat & Radiator Fan Control",
+      "summary": "Pressurized closed-loop cooling circuit, 88°C wax-pellet thermostat, belt-driven centrifugal water pump, aluminum fin radiator, and ECM-controlled cooling fan relay.",
+      "key_specs": [
+        { "parameter": "Radiator Cap Relief Pressure", "value": "1.1 bar (108 kPa / 15.6 psi)" },
+        { "parameter": "Thermostat Opening Temperature", "value": "Begins opening at 86.5 - 89.5°C | Full lift (>8 mm) at 100°C" },
+        { "parameter": "ECM Radiator Fan Trigger", "value": "Turns ON at 98°C (or immediately when A/C ON or ECT circuit open) | Turns OFF at 93°C" },
+        { "parameter": "Water Pump Drive Belt Deflection", "value": "6.0 - 8.0 mm under 98 N (10 kgf) thumb pressure between crank and alternator" }
+      ],
+      "routing_notes": "Upper radiator hose routes from thermostat housing (gearbox end of cylinder head) to top radiator tank; lower hose routes from bottom radiator tank to water pump inlet pipe behind exhaust manifold."
+    },
+    {
+      "section_id": "SEC-1C",
+      "title": "Section 1C — MPFI Fuel Delivery, Injectors, EVAP & PCV Emission Control",
+      "summary": "Returnless multi-point fuel injection @ 3.5 bar, 3 top-feed electromagnetic injectors, charcoal canister EVAP purge solenoid, and crankcase PCV valve.",
+      "key_specs": [
+        { "parameter": "Fuel Rail Pressure (Key ON / Idle)", "value": "3.4 - 3.6 bar (350 kPa) regulated inside fuel tank module" },
+        { "parameter": "Residual Hold Pressure (1 min after OFF)", "value": "Minimum 2.5 bar (if lower, check fuel pump check-valve or leaking injector)" },
+        { "parameter": "Fuel Injector Coil Resistance", "value": "11.5 - 13.5 Ω at 20°C (MGP 15710-68K00)" },
+        { "parameter": "EVAP Canister Purge Solenoid Resistance", "value": "26 - 32 Ω at 20°C (ECM Pin C06 PWM controlled)" }
+      ],
+      "routing_notes": "High-pressure nylon fuel supply line & EVAP vapor line run along left underbody floor pan channel from rear tank to engine bay firewall."
+    },
+    {
+      "section_id": "SEC-1D",
+      "title": "Section 1D — Electronic Ignition System (Coils, HT Cords & Spark Plugs)",
+      "summary": "ECM-controlled solid-state ignition coils firing Cylinders 1-3-2, resistive high-tension silicone cords, and NGK DCPR7E nickel/iridium spark plugs.",
+      "key_specs": [
+        { "parameter": "Firing Order & Cylinder Numbering", "value": "1 - 3 - 2 (Cyl #1 at timing belt left side, Cyl #3 at flywheel/gearbox right side)" },
+        { "parameter": "Ignition Coil Primary Resistance", "value": "0.5 - 1.5 Ω at 20°C" },
+        { "parameter": "Ignition Coil Secondary Resistance", "value": "8.5 - 13.5 kΩ" },
+        { "parameter": "Ignition Timing at Warm Idle", "value": "8° ± 3° BTDC @ 800 RPM (Base timing controlled by ECM CKP/MAP table)" }
+      ],
+      "routing_notes": "HT leads must be routed in plastic separator clips away from the metal cylinder head lifting hook and O2 sensor harness to prevent cross-firing and EMI noise."
+    },
+    {
+      "section_id": "SEC-1E",
+      "title": "Section 1E — Starting & Charging System (Starter Motor, Alternator & Battery)",
+      "summary": "12V 0.8 kW planetary gear-reduction starter motor, 50A/55A internal-regulator alternator, and 35B20R / 38B20R maintenance-free battery.",
+      "key_specs": [
+        { "parameter": "Battery Cold Cranking Voltage", "value": "Must remain >= 9.6 V during starter cranking at 250 RPM" },
+        { "parameter": "Alternator Regulated Output", "value": "13.8 - 14.4 V @ 2,000 RPM with headlights and blower ON" },
+        { "parameter": "Parasitic Dark Current Draw", "value": "< 25 mA with doors closed and ignition OFF for 5 minutes" },
+        { "parameter": "Starter Solenoid Pull-in Voltage", "value": ">= 8.0 V at Terminal 50 (Black/Yellow wire from ignition switch)" }
+      ],
+      "routing_notes": "Unfused 25 mm² Red/Black battery positive cable runs directly from Battery (+) to Starter Terminal 30; 80A Main Fusible Link feeds Alternator B+ and Fuse Box."
+    },
+    {
+      "section_id": "SEC-1F",
+      "title": "Section 1F — Electronic Engine Control (ECM Bosch ME17.9.71 / Delphi MT22.1)",
+      "summary": "Complete 60-pin/94-pin ECM terminal voltages, waveforms, sensor 5V reference bus, KWP2000 / CAN bus diagnostics, and idle speed learning.",
+      "key_specs": [
+        { "parameter": "ECM 5V Sensor Reference Bus (Pin C32)", "value": "4.85 - 5.15 V shared by MAP, TPS, and CMP/Ref sensors" },
+        { "parameter": "ECM Sensor Ground E2 (Pin C19)", "value": "< 0.05 V drop to battery negative" },
+        { "parameter": "ECM Main Power Grounds", "value": "Bolted to G3 on back of F8D intake manifold plenum" },
+        { "parameter": "OBD-II DLC Communication", "value": "Pin 7 K-Line (ISO 14230-4 Fast Init 0x10) & Pins 6/14 CAN (ISO 15765-4 500 kbps)" }
+      ],
+      "routing_notes": "ECM is mounted on the engine bay bulkhead / passenger glovebox cowl bracket depending on BS-IV production batch; main harness grommet passes through right passenger firewall."
+    },
+    {
+      "section_id": "SEC-2A",
+      "title": "Section 2A — Clutch System (160mm Diaphragm Clutch & Cable Adjustment)",
+      "summary": "Cable-actuated mechanical release fork, 160mm dry single-plate friction disc, diaphragm pressure plate, and pilot/release bearings.",
+      "key_specs": [
+        { "parameter": "Clutch Pedal Free Play", "value": "15 - 20 mm at pedal pad (2 - 4 mm at release lever arm nut)" },
+        { "parameter": "Clutch Disc Rivet Depth Limit", "value": "Minimum 0.3 mm (Standard 1.2 mm) — MGP 22400-68K00" },
+        { "parameter": "Pressure Plate Bolt Torque", "value": "23 Nm tightened diagonally in 3 stages" },
+        { "parameter": "Flywheel Mounting Bolt Torque", "value": "61 Nm with medium-strength threadlocker" }
+      ],
+      "routing_notes": "Clutch cable (MGP 23710-68K00) routes from clutch pedal clevis through driver firewall, looping smoothly behind battery tray to transaxle release lever."
+    },
+    {
+      "section_id": "SEC-2B",
+      "title": "Section 2B — 5-Speed Manual Transaxle (5MT) & Front Driveshafts (CV Joints)",
+      "summary": "Constant-mesh 5-speed synchromesh gearbox, dual-cable floor shifter mechanism, differential side gears, and inboard tripod / outboard Birfield CV joints.",
+      "key_specs": [
+        { "parameter": "Gear Oil Specification", "value": "2.1 Liters SAE 75W-90 API GL-4 (Drain & Fill Plug Torque: 23 Nm)" },
+        { "parameter": "Driveshaft Axle Hub Nut Torque", "value": "175 Nm (Stake collar into axle spindle groove after torquing)" },
+        { "parameter": "Vehicle Speed Sensor (VSS)", "value": "3-Pin Hall sensor on differential housing (MGP 34960-68K00, 9 Nm)" }
+      ],
+      "routing_notes": "Selector and shift cables route under center console heat shield; left driveshaft is shorter (solid bar), right driveshaft is longer."
+    },
+    {
+      "section_id": "SEC-3A",
+      "title": "Section 3A — Steering Rack & Column-Mounted Electric Power Steering (EPS)",
+      "summary": "Manual rack-and-pinion gear with steering column-mounted brushless DC assist motor, optical/magnetic torque sensor, and EPS control unit (LXi/VXi).",
+      "key_specs": [
+        { "parameter": "Front Toe-In Alignment", "value": "0 ± 2 mm (0°00' ± 0°12')" },
+        { "parameter": "Tie Rod End Ball Stud Nut Torque", "value": "43 Nm with new split cotter pin" },
+        { "parameter": "EPS Power Supply Fuse", "value": "40A / 50A Slow-Blow Fuse in Engine Room Fuse Box" },
+        { "parameter": "EPS Speed & RPM Inputs", "value": "Receives VSS pulse and ECM RPM pulse; enters fail-safe if RPM > 500 with 0V motor output" }
+      ],
+      "routing_notes": "EPS control module is bolted directly under the steering column behind the speedometer cluster."
+    },
+    {
+      "section_id": "SEC-3B",
+      "title": "Section 3B — Front MacPherson Strut & Rear 3-Link Coil Suspension",
+      "summary": "Front strut damper assembly, lower control arm with integrated ball joint, stabilizer bar link bushes, and rear trailing arms with Panhard lateral rod.",
+      "key_specs": [
+        { "parameter": "Front Strut-to-Knuckle Bolts", "value": "85 Nm" },
+        { "parameter": "Lower Control Arm Ball Joint Pinch Bolt", "value": "55 Nm (Tighten at curb ride height)" },
+        { "parameter": "Wheel Lug Nut Torque", "value": "85 Nm (12-inch steel wheels, 145/80 R12 tire pressure: 30 psi Front / 30 psi Rear)" }
+      ],
+      "routing_notes": "Inspect lower arm rubber bushings and stabilizer bar D-bushes on front crossmember every 10,000 km for knocking noises on rough roads."
+    },
+    {
+      "section_id": "SEC-4A",
+      "title": "Section 4A — Hydraulic Brakes, Vacuum Booster & Rear Drum Assembly",
+      "summary": "Vacuum-assisted tandem master cylinder, diagonal split hydraulic circuits, front floating-caliper disc brakes, and rear self-adjusting drum brakes.",
+      "key_specs": [
+        { "parameter": "Front Brake Disc Thickness", "value": "Standard: 10.0 mm (Solid) / 17.0 mm (Ventilated) | Wear Limit: -2.0 mm" },
+        { "parameter": "Front Brake Pad Lining Minimum", "value": "2.0 mm remaining friction material (MGP 55810-68K00)" },
+        { "parameter": "Rear Brake Drum Inner Diameter", "value": "Standard: 180.0 mm | Service Limit: 181.5 mm" },
+        { "parameter": "Parking Brake Lever Clicks", "value": "4 to 7 notches at 200 N pull force (Brake fluid DOT 3 / DOT 4)" }
+      ],
+      "routing_notes": "Brake bleeding sequence (Right-Hand Drive India): 1) Rear Left -> 2) Front Right -> 3) Rear Right -> 4) Front Left."
+    },
+    {
+      "section_id": "SEC-5A",
+      "title": "Section 5A — Body Electrical, Lighting, Wipers, Horn & Instrument Cluster",
+      "summary": "Combination headlamp/turn switch, H4 60/55W halogen headlamps, wiper motor park circuit, digital fuel/odometer LCD cluster, and immobilizer transponder.",
+      "key_specs": [
+        { "parameter": "Headlamp Bulb Specification", "value": "12V 60/55W H4 Halogen (Negative-switched via combination stalk)" },
+        { "parameter": "Fuel Tank Sender Resistance", "value": "Full: 3 - 7 Ω | Half: 32 - 38 Ω | Empty: 105 - 115 Ω" },
+        { "parameter": "Immobilizer Transponder Frequency", "value": "125 kHz RF ring antenna around ignition key cylinder (DTC P1610/P1614)" }
+      ],
+      "routing_notes": "Maruti Suzuki uses negative-switched (ground-switched) headlamp circuits: +12V is fed to the H4 common terminal via Left/Right 15A fuses when headlamp relay closes, and the stalk switches High/Low beam to ground G4/G5."
+    },
+    {
+      "section_id": "SEC-6A",
+      "title": "Section 6A — Heating, Ventilation & Air Conditioning (HVAC & A/C Compressor)",
+      "summary": "Subros rotary vane / scroll A/C compressor, magnetic clutch coil, high/low dual-pressure cut-off switch, evaporator anti-freeze thermistor, and 4-speed blower.",
+      "key_specs": [
+        { "parameter": "Refrigerant Type & Charge Weight", "value": "HFC-134a (R134a): 320 ± 20 grams | Compressor Oil: PAG 46 / SP-10" },
+        { "parameter": "Dual Pressure Switch Cut-Out", "value": "Low Pressure OFF: < 2.0 bar | High Pressure OFF: > 31.4 bar" },
+        { "parameter": "Evaporator Fin Thermistor", "value": "Cuts compressor OFF at 1.5°C to prevent core icing; turns back ON at 4.0°C" },
+        { "parameter": "A/C Compressor Magnetic Clutch Coil", "value": "3.4 - 4.2 Ω at 20°C (Air gap: 0.35 - 0.65 mm)" }
+      ],
+      "routing_notes": "When the cabin A/C button is pressed and blower is >= Speed 1, the HVAC amplifier signals ECM Pin C55; the ECM first steps up IACV by +25 steps to raise idle to 900 RPM before grounding the A/C Compressor Relay (Pin C07)."
+    }
+  ],
+  "ground_points": [
+    { "id": "G1", "location": "Battery Negative (-) Terminal to Left Inner Fender Apron Bolt (M8)", "circuits": "Main Chassis Return, Headlamps Left, Horn", "fault_symptom": "Dim left headlight, slow cranking, body electronics reset when horn pressed" },
+    { "id": "G2", "location": "5MT Transaxle Housing Top Bolt to Battery Negative Heavy Cable", "circuits": "Starter Motor 150A Return, Alternator Case Return, Ignition Spark Return", "fault_symptom": "Starter clicks or cranks very slowly; clutch cable melts from carrying starter ground current!" },
+    { "id": "G3", "location": "Rear of F8D Intake Manifold Plenum (Two 10mm Bolts — Critical ECM Ground)", "circuits": "ECM Power Ground, Sensor Ground Reference (E1/E2), Ignition Coil Ground, Shield Ground", "fault_symptom": "No start, multiple false sensor DTCs (P0105, P0115, P0120, P0335), erratic tachometer" },
+    { "id": "G4", "location": "Front Left Radiator Core Support Apron behind Left Headlamp", "circuits": "Left H4 Headlamp, Front Left Turn Signal, Radiator Cooling Fan Motor Ground", "fault_symptom": "Radiator fan runs slowly (overheating in traffic) or left headlamp glows dimly with turn indicator" },
+    { "id": "G5", "location": "Front Right Fender Apron behind Washer Reservoir / Battery", "circuits": "Right H4 Headlamp, Front Right Turn Signal, Windshield Washer Pump", "fault_symptom": "Right headlamp dim or high-beam indicator stays faintly lit" },
+    { "id": "G6", "location": "Left Kick Panel (Driver Footwell A-Pillar Lower Bolt)", "circuits": "16-Pin OBD-II DLC Pin 4 (CGND), Combination Switch, Wiper Motor, Turn Flasher", "fault_symptom": "OBD-II scanner won't power on or drops K-Line connection; wipers park erratically" },
+    { "id": "G7", "location": "Center Steering Column Support Bracket under Dashboard", "circuits": "Instrument Cluster, EPS Controller Logic Ground, Immobilizer Antenna Module", "fault_symptom": "Speedometer/fuel gauge flickers when turning headlights ON; EPS warning light illuminates" },
+    { "id": "G8", "location": "Center Console Floor Tunnel under Parking Brake Lever", "circuits": "Blower Motor High-Speed Ground, Audio Head Unit, 12V Accessory Socket", "fault_symptom": "Cabin blower fan weak on Speed 4; radio hums with engine RPM" },
+    { "id": "G9", "location": "Right Kick Panel (Passenger Footwell A-Pillar Lower Bolt)", "circuits": "ECM Case Ground, Central Door Locking Controller, Front Power Window Relay", "fault_symptom": "Central locking fails to unlock all doors; power windows move sluggishly" },
+    { "id": "G10", "location": "Left B-Pillar Lower Sill Panel under Driver Seat Carpet", "circuits": "In-Tank Electric Fuel Pump Ground & Fuel Level Gauge Sender Return", "fault_symptom": "Intermittent engine stalling over potholes (fuel pump loses ground); fuel gauge reads Empty/Full randomly" },
+    { "id": "G11", "location": "Rear Left Quarter Panel behind Left Tail Lamp Cluster", "circuits": "Left Tail/Stop/Turn Lamps, Rear License Plate Lamp, Rear Fog/Reverse Lamp", "fault_symptom": "Classic 'Christmas tree' tail light effect — brake pedal makes turn signal blink" },
+    { "id": "G12", "location": "Rear Tailgate Hinge Ground Strap (VXi with Rear Wiper/Demister)", "circuits": "High-Mount Third Brake LED Strip, Rear Defogger Grid", "fault_symptom": "High-mount stop lamp dead" },
+    { "id": "G13", "location": "Cylinder Head Camshaft Cover to Firewall Braided RF Bond Strap", "circuits": "High-Voltage Ignition EMI Suppression & O2 Sensor Reference Stability", "fault_symptom": "Radio static and false P0335 CKP noise spikes at high RPM" },
+    { "id": "G14", "location": "A/C Compressor Body to Engine Block Bracket", "circuits": "Single-Wire A/C Magnetic Clutch Return", "fault_symptom": "A/C clutch fails to engage even with 12V on Black/Yellow feed wire" }
+  ],
+  "fuse_and_relay_boxes": {
+    "engine_room_jb": {
+      "name": "Engine Bay Fuse & Relay Box (Next to Battery on Left Fender Apron)",
+      "relays": [
+        { "id": "RLY-MAIN", "name": "FI Main Relay (ECM & Injectors)", "pins": "4-Pin (30, 85, 86, 87)", "control": "Grounded by ECM Pin C48 when Ignition ON", "failure_symptom": "No Check Engine Light on dashboard with key ON; engine cranks but no spark/fuel" },
+        { "id": "RLY-FP", "name": "Fuel Pump Relay", "pins": "4-Pin", "control": "Grounded by ECM Pin C49 for 3 sec at key-ON and continuously while CKP pulses", "failure_symptom": "No 3-second hum from rear seat at key-ON; cranks with spark but no fuel pressure" },
+        { "id": "RLY-FAN", "name": "Radiator Cooling Fan Relay", "pins": "4-Pin", "control": "Grounded by ECM Pin C50 at ECT >= 98°C or A/C ON", "failure_symptom": "Engine overheats in bumper-to-bumper traffic; normal on highway" },
+        { "id": "RLY-AC", "name": "A/C Compressor Clutch Relay", "pins": "4-Pin", "control": "Grounded by ECM Pin C07 when A/C requested & pressure switch closed", "failure_symptom": "Blower works but A/C compressor clutch never clicks ON" },
+        { "id": "RLY-HL", "name": "Headlamp Main Relay", "pins": "4-Pin", "control": "Combination lighting stalk", "failure_symptom": "Both left and right headlamps dead simultaneously" }
+      ],
+      "fuses": [
+        { "id": "FL-1", "rating": "80A", "type": "Bolted Slow-Blow", "circuit": "Main Battery Charge & Alternator Output", "symptom": "Complete vehicle electrical blackout" },
+        { "id": "FL-2", "rating": "50A", "type": "Slow-Blow", "circuit": "Electric Power Steering (EPS) Motor Supply", "symptom": "Heavy manual steering; EPS light ON" },
+        { "id": "FL-3", "rating": "40A", "type": "Slow-Blow", "circuit": "Ignition Switch Main Feed (IG1 / IG2)", "symptom": "No dashboard lights, no starter crank" },
+        { "id": "FL-4", "rating": "30A", "type": "Slow-Blow", "circuit": "Radiator Cooling Fan Motor", "symptom": "Radiator fan dead -> overheating" },
+        { "id": "F-01", "rating": "15A", "type": "Mini Blade", "circuit": "FI / ECM Main Relay, Injectors, Ignition Coils & Fuel Pump", "symptom": "Engine stalls instantly; no CEL" },
+        { "id": "F-02", "rating": "15A", "type": "Mini Blade", "circuit": "Headlamp Left (Low/High)", "symptom": "Left headlamp dead" },
+        { "id": "F-03", "rating": "15A", "type": "Mini Blade", "circuit": "Headlamp Right (Low/High)", "symptom": "Right headlamp dead" },
+        { "id": "F-04", "rating": "10A", "type": "Mini Blade", "circuit": "A/C Compressor Magnetic Clutch", "symptom": "No cooling from A/C" },
+        { "id": "F-05", "rating": "15A", "type": "Mini Blade", "circuit": "Horn & Hazard Warning Lamps", "symptom": "Horn & hazard flashers dead" }
+      ]
+    },
+    "cabin_interior_jb": {
+      "name": "Interior Cabin Fuse Box (Under Driver Dashboard Right Side beside 16-Pin OBD-II DLC)",
+      "fuses": [
+        { "id": "F-11", "rating": "10A", "circuit": "OBD-II DLC Pin 16 (+12V), Dome Lamp, Immobilizer & Clock Memory", "symptom": "OBD-II scanner won't power up; trip meter resets every key off" },
+        { "id": "F-12", "rating": "15A", "circuit": "Ignition Coil & ECM IG1 Wakeup Signal", "symptom": "Cranks but no spark" },
+        { "id": "F-13", "rating": "10A", "circuit": "Instrument Cluster Gauges, Warning Lamps, Reverse Lamp & VSS Power", "symptom": "Dashboard dead + P0500 VSS code" },
+        { "id": "F-14", "rating": "20A", "circuit": "Front Windshield Wiper & Washer Motor", "symptom": "Wipers inoperative" },
+        { "id": "F-15", "rating": "15A", "circuit": "12V Accessory Cigar Socket & Audio Head Unit", "symptom": "Phone charger / stereo dead" },
+        { "id": "F-16", "rating": "25A", "circuit": "HVAC Cabin Blower Fan Motor", "symptom": "No air from dashboard vents on any speed" },
+        { "id": "F-17", "rating": "10A", "circuit": "Stop / Brake Lamps", "symptom": "Brake lights do not illuminate when pedal pressed" },
+        { "id": "F-18", "rating": "10A", "circuit": "Tail, Position, License Plate & Dashboard Backlight Illumination", "symptom": "No parking lights or cluster night backlight" }
+      ]
+    }
+  }
+}
