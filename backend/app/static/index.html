@@ -61,26 +61,29 @@
       <button onclick="switchTab('garage')" id="tab-btn-garage" class="nav-btn active px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 transition">
         1. My Garage
       </button>
+      <button onclick="switchTab('vision')" id="tab-btn-vision" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-emerald-500/40 bg-emerald-950/40 text-emerald-300 transition">
+        📸 2. Image Warranty & Part-Level Saver
+      </button>
       <button onclick="switchTab('manuals')" id="tab-btn-manuals" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900/80 text-cyan-300 transition">
-        2. Workshop Manuals & Routings
+        3. Workshop Manuals & Routings
       </button>
       <button onclick="switchTab('master20k')" id="tab-btn-master20k" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900/80 text-amber-300 transition">
-        3. 20,000 Issues & 20,000 Blueprints DB
+        4. 20,000 Issues & Blueprints DB
       </button>
       <button onclick="switchTab('scanner')" id="tab-btn-scanner" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 transition">
-        4. Live OBD-II Scanner
+        5. Live OBD-II Scanner
       </button>
       <button onclick="switchTab('diagnostics')" id="tab-btn-diagnostics" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 transition">
-        5. AI Diagnostic Engine
+        6. AI Diagnostic Engine
       </button>
       <button onclick="switchTab('wiring')" id="tab-btn-wiring" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 transition">
-        6. Wiring & Multimeter Lab
+        7. Wiring & Multimeter Lab
       </button>
       <button onclick="switchTab('diy')" id="tab-btn-diy" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 transition">
-        7. Core DIY Procedures
+        8. Core DIY Procedures
       </button>
       <button onclick="switchTab('reports')" id="tab-btn-reports" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 transition">
-        8. Repair Verification
+        9. Repair Verification
       </button>
     </div>
   </header>
@@ -179,7 +182,119 @@
       </div>
     </section>
 
-    <!-- TAB 2: COMPLETE WORKSHOP MANUALS, HARNESS ROUTINGS, G1-G14 GROUNDS & FUSE BOXES -->
+    <!-- TAB 2: AI IMAGE INSPECTOR — WARRANTY, DURABILITY & PART-LEVEL COST SAVER -->
+    <section id="tab-vision" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 border border-emerald-500/30 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400">
+              <span>ANTI-OVERCHARGING VISUAL INSPECTOR • ALL 125 MECHANICAL & ELECTRICAL PARTS</span>
+            </div>
+            <h2 class="text-xl font-bold text-white mt-0.5">Upload Vehicle Part Image → Check Warranty, Durability Limit & Part-Level Maintenance</h2>
+            <p class="text-xs text-slate-400">
+              Examines your uploaded part photo, checks Factory & MGP Replacement Warranty/Guarantee from the 2013 Alto 800 Manuals, evaluates remaining durability/reliability limits, and guides part-level maintenance instead of expensive whole-assembly replacement.
+            </p>
+          </div>
+          <div id="vision-total-savings-pill" class="px-3.5 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs font-bold">
+            Avg Part-Level Cost Savings: ~85% vs Full Replacement
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2 border-t border-slate-800">
+          <!-- Left Column: Image Upload + Component & Warranty Inputs -->
+          <div class="space-y-4">
+            <div class="p-4 rounded-xl bg-slate-900/90 border-2 border-dashed border-blue-500/40 text-center space-y-3">
+              <div id="vision-preview-wrap" class="w-full h-40 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center overflow-hidden">
+                <img id="vision-img-preview" src="/api/manuals/image/1.svg" alt="Component Preview" class="w-full h-full object-contain" />
+              </div>
+              <label class="block cursor-pointer">
+                <span class="inline-block px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow transition">
+                  📸 Upload Component Photo / Image
+                </span>
+                <input id="vision-file-input" type="file" accept="image/*" onchange="handleImageFileSelect(event)" class="hidden" />
+              </label>
+              <div id="vision-file-label" class="text-[11px] text-slate-400 font-mono">
+                Ready for photo upload (JPEG, PNG, WEBP) or select any component below
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Select or Confirm 2013 Alto 800 Component (125 Parts)</label>
+              <select id="vision-comp-select" onchange="runVisionInspection()" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white">
+                <!-- Populated dynamically with all 125 components -->
+              </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Vehicle Odometer (km)</label>
+                <input id="vision-odo-km" type="number" value="68450" onchange="runVisionInspection()"
+                  class="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white font-mono" />
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Part Fitment Status</label>
+                <select id="vision-fitment-mode" onchange="toggleFitmentMode()" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white">
+                  <option value="factory">Original 2013 Factory Part (Warranty Expired)</option>
+                  <option value="recent_mgp">Recently Replaced MGP Part (Check Guarantee)</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="vision-recent-mgp-inputs" class="hidden grid grid-cols-2 gap-3 p-3 rounded-lg bg-blue-950/30 border border-blue-500/30">
+              <div>
+                <label class="block text-[11px] text-blue-300 mb-1">Months Since Installed</label>
+                <input id="vision-part-months" type="number" value="3" onchange="runVisionInspection()"
+                  class="w-full px-2.5 py-1 rounded bg-slate-900 border border-slate-700 text-xs text-white font-mono" />
+              </div>
+              <div>
+                <label class="block text-[11px] text-blue-300 mb-1">km Driven on New Part</label>
+                <input id="vision-part-km" type="number" value="4200" onchange="runVisionInspection()"
+                  class="w-full px-2.5 py-1 rounded bg-slate-900 border border-slate-700 text-xs text-white font-mono" />
+              </div>
+            </div>
+
+            <button onclick="runVisionInspection()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-bold text-xs shadow-lg transition">
+              Examine Part Image, Check Warranty & Generate Part-Level Plan
+            </button>
+          </div>
+
+          <!-- Right 2 Columns: Examination Verdict, Warranty, Durability & Part-Level Maintenance Report -->
+          <div id="vision-report-container" class="lg:col-span-2 space-y-4">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Full 125-Component Warranty, Durability & Part-Level Cost Savings Matrix -->
+      <div class="glass-card rounded-2xl p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 class="text-base font-bold text-white">Complete 125-Component Warranty, Durability Limit & Part-Level Maintenance Cost Matrix</h3>
+            <p class="text-xs text-slate-400">Click any row to inspect that part's warranty policy, service wear limit, and step-by-step sub-component repair procedure</p>
+          </div>
+          <input id="vision-table-filter" type="text" oninput="filterVisionTable()" placeholder="Filter 125 components (e.g. Alternator, Clutch, AC, MAP, Strut)..."
+            class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white w-72" />
+        </div>
+        <div class="overflow-x-auto max-h-[420px] overflow-y-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="sticky top-0 bg-slate-950 border-b border-slate-700 text-slate-400">
+              <tr>
+                <th class="py-2 px-2.5">ID / Manual</th>
+                <th class="py-2 px-2.5">Component & MGP #</th>
+                <th class="py-2 px-2.5">MGP Guarantee</th>
+                <th class="py-2 px-2.5">Durability Limit</th>
+                <th class="py-2 px-2.5">Full Replace Quote</th>
+                <th class="py-2 px-2.5">Part-Level Maint.</th>
+                <th class="py-2 px-2.5">Owner Savings</th>
+              </tr>
+            </thead>
+            <tbody id="vision-125-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: COMPLETE WORKSHOP MANUALS, HARNESS ROUTINGS, G1-G14 GROUNDS & FUSE BOXES -->
     <section id="tab-manuals" class="hidden space-y-6">
       <div class="glass-card rounded-2xl p-6 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-4">
@@ -562,6 +677,8 @@
   <script>
     let kbData = null;
     let manualData = null;
+    let visionComponentsList = [];
+    let uploadedImageFile = null;
     let currentScannerData = null;
     let currentQAResponses = {};
     let current20kPage = 1;
@@ -569,7 +686,7 @@
     let searchTimer = null;
 
     function switchTab(tabName) {
-      const tabs = ['garage', 'manuals', 'master20k', 'scanner', 'diagnostics', 'wiring', 'diy', 'reports'];
+      const tabs = ['garage', 'vision', 'manuals', 'master20k', 'scanner', 'diagnostics', 'wiring', 'diy', 'reports'];
       tabs.forEach(t => {
         document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tabName);
         document.getElementById(`tab-btn-${t}`).classList.toggle('active', t === tabName);
@@ -578,16 +695,20 @@
 
     async function initApp() {
       try {
-        const [kbRes, manRes] = await Promise.all([
+        const [kbRes, manRes, visRes] = await Promise.all([
           fetch('/api/diagnosis/knowledge-base'),
-          fetch('/api/manuals/workshop')
+          fetch('/api/manuals/workshop'),
+          fetch('/api/vision/components')
         ]);
         kbData = await kbRes.json();
         manualData = await manRes.json();
+        const visData = await visRes.json();
+        visionComponentsList = visData.components || [];
         renderDLCConnector();
         renderSelectedCircuit();
         renderDIYProcedures();
         renderWorkshopManualsAndRoutings();
+        initVisionInspector(visData);
       } catch (e) {
         console.error('Failed loading KB/Manuals:', e);
       }
@@ -595,6 +716,196 @@
       await scanECU();
       await runAIDiagnosis();
       await loadRepairReports();
+    }
+
+    function initVisionInspector(visData) {
+      if (visData && visData.total_potential_savings_inr) {
+        document.getElementById('vision-total-savings-pill').textContent =
+          `125 Parts Catalog: Save ₹${visData.total_potential_savings_inr.toLocaleString()} (${visData.average_savings_percent}% Avg Savings vs Full Replacement)`;
+      }
+      const sel = document.getElementById('vision-comp-select');
+      sel.innerHTML = visionComponentsList.map(c =>
+        `<option value="${c.comp_id}">[${c.comp_id} • ${c.manual_section}] ${c.name} (MGP #${c.mgp_part_number})</option>`
+      ).join('');
+      filterVisionTable();
+      runVisionInspection();
+    }
+
+    function filterVisionTable() {
+      const q = (document.getElementById('vision-table-filter').value || '').toLowerCase();
+      const filtered = visionComponentsList.filter(c =>
+        !q ||
+        c.name.toLowerCase().includes(q) ||
+        c.comp_id.toLowerCase().includes(q) ||
+        c.mgp_part_number.toLowerCase().includes(q) ||
+        c.category.toLowerCase().includes(q) ||
+        c.related_dtc.toLowerCase().includes(q)
+      );
+      const tbody = document.getElementById('vision-125-tbody');
+      tbody.innerHTML = filtered.map(c => `
+        <tr onclick="selectVisionComp('${c.comp_id}')" class="border-b border-slate-800/80 hover:bg-blue-950/40 cursor-pointer transition">
+          <td class="py-2 px-2.5 font-mono text-blue-400 font-bold">${c.comp_id}<br/><span class="text-[10px] text-slate-500">${c.manual_section}</span></td>
+          <td class="py-2 px-2.5"><strong class="text-white">${c.name}</strong><br/><span class="text-[11px] font-mono text-cyan-300">MGP #${c.mgp_part_number} • ${c.related_dtc}</span></td>
+          <td class="py-2 px-2.5 text-slate-300 text-[11px]">${c.mgp_guarantee}</td>
+          <td class="py-2 px-2.5 font-mono text-emerald-300">${c.design_durability_km.toLocaleString()} km<br/><span class="text-[10px] text-slate-400">${c.core_reliability_remaining_percent}% Core Left</span></td>
+          <td class="py-2 px-2.5 font-mono text-red-300 line-through">₹${c.dealer_full_replacement_inr.toLocaleString()}</td>
+          <td class="py-2 px-2.5 font-mono text-emerald-300 font-bold">₹${c.part_level_maintenance_inr.toLocaleString()}<br/><span class="text-[10px] font-sans text-slate-400">${c.part_level_subcomponent.slice(0, 36)}...</span></td>
+          <td class="py-2 px-2.5 font-mono font-bold text-amber-300">Save ₹${c.rupees_saved_inr.toLocaleString()} (${c.savings_percent}%)</td>
+        </tr>
+      `).join('');
+    }
+
+    function selectVisionComp(compId) {
+      document.getElementById('vision-comp-select').value = compId;
+      const compIdx = parseInt(compId.split('-')[1], 10) || 1;
+      const blueprintIssueId = ((compIdx - 1) * 160) + 1;
+      if (!uploadedImageFile) {
+        document.getElementById('vision-img-preview').src = `/api/manuals/image/${blueprintIssueId}.svg`;
+      }
+      runVisionInspection();
+    }
+
+    function toggleFitmentMode() {
+      const mode = document.getElementById('vision-fitment-mode').value;
+      document.getElementById('vision-recent-mgp-inputs').classList.toggle('hidden', mode !== 'recent_mgp');
+      runVisionInspection();
+    }
+
+    function handleImageFileSelect(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      uploadedImageFile = file;
+      document.getElementById('vision-file-label').textContent = `Uploaded: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('vision-img-preview').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      runVisionInspection();
+    }
+
+    async function runVisionInspection() {
+      const compId = document.getElementById('vision-comp-select').value || 'CMP-001';
+      const odoKm = parseInt(document.getElementById('vision-odo-km').value, 10) || 68450;
+      const fitMode = document.getElementById('vision-fitment-mode').value;
+
+      const formData = new FormData();
+      if (uploadedImageFile) {
+        formData.append('file', uploadedImageFile);
+      } else {
+        const compIdx = parseInt(compId.split('-')[1], 10) || 1;
+        const blueprintIssueId = ((compIdx - 1) * 160) + 1;
+        document.getElementById('vision-img-preview').src = `/api/manuals/image/${blueprintIssueId}.svg`;
+      }
+      formData.append('component_id', compId);
+      formData.append('odometer_km', odoKm);
+
+      if (fitMode === 'recent_mgp') {
+        formData.append('part_age_months', parseInt(document.getElementById('vision-part-months').value, 10) || 3);
+        formData.append('part_km_driven', parseInt(document.getElementById('vision-part-km').value, 10) || 4200);
+      }
+
+      const res = await fetch('/api/vision/inspect', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      renderVisionReport(data);
+    }
+
+    function renderVisionReport(data) {
+      const c = data.component;
+      const w = data.warranty_and_guarantee;
+      const d = data.durability_and_reliability;
+      const p = data.anti_overcosting_part_level_plan;
+      const v = data.visual_examination;
+
+      const container = document.getElementById('vision-report-container');
+      container.innerHTML = `
+        <!-- 1. Warranty & Guarantee Card -->
+        <div class="p-4 rounded-xl border ${w.mgp_part_guarantee_active ? 'bg-emerald-950/30 border-emerald-500/50' : 'bg-amber-950/25 border-amber-500/40'} space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider ${w.mgp_part_guarantee_active ? 'text-emerald-300' : 'text-amber-300'}">
+              1. Manual Warranty & Guarantee Verification (${c.manual_section})
+            </span>
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${w.mgp_part_guarantee_active ? 'bg-emerald-500/20 text-emerald-200 border border-emerald-500/40' : 'bg-amber-500/20 text-amber-200 border border-amber-500/40'}">
+              ${w.status_badge}
+            </span>
+          </div>
+          <p class="text-xs text-slate-200 leading-relaxed">${w.detailed_verdict}</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-[11px] text-slate-300">
+            <div class="p-2 rounded bg-slate-950/80 border border-slate-800"><strong>Factory Policy:</strong> ${w.factory_vehicle_warranty_policy}</div>
+            <div class="p-2 rounded bg-slate-950/80 border border-slate-800"><strong>MGP Spare Guarantee:</strong> ${w.mgp_spare_part_guarantee_policy}</div>
+          </div>
+        </div>
+
+        <!-- 2. Durability & Reliability Limit Card -->
+        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-cyan-400">
+              2. Component Durability & Reliability Limit Check
+            </span>
+            <span class="text-xs font-mono font-bold text-emerald-300">
+              Core Reliability Remaining: ${d.core_reliability_remaining_percent}% (~${d.estimated_remaining_life_km_after_maintenance.toLocaleString()} km left)
+            </span>
+          </div>
+          <div class="w-full h-2.5 rounded-full bg-slate-800 overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400" style="width: ${d.core_reliability_remaining_percent}%"></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
+            <div class="p-2 rounded bg-slate-950 border border-slate-800">
+              <div class="text-slate-400">Design Durability Limit</div>
+              <div class="font-bold text-white font-mono">${d.design_durability_limit_km.toLocaleString()} km / ${d.design_durability_limit_years} Yrs</div>
+            </div>
+            <div class="p-2 rounded bg-slate-950 border border-slate-800">
+              <div class="text-slate-400">MTBF Rating & Visual Scan</div>
+              <div class="font-bold text-cyan-300 font-mono">${d.mtbf_hours.toLocaleString()} hrs • ${v.image_fingerprint}</div>
+            </div>
+            <div class="p-2 rounded bg-slate-950 border border-slate-800">
+              <div class="text-slate-400">Manual Service Wear Limit</div>
+              <div class="font-bold text-amber-300">${d.manual_reliability_wear_limit}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Anti-Overcosting Part-Level Maintenance Recommendation -->
+        <div class="p-4 rounded-xl bg-blue-950/30 border border-blue-500/40 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-300">
+              🛡️ 3. ${p.action_directive}
+            </span>
+            <span class="px-3 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono text-xs font-black">
+              YOU SAVE ₹${p.total_rupees_saved_inr.toLocaleString()} (${p.cost_savings_percent}% SAVED)
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="p-3 rounded-lg bg-red-950/40 border border-red-500/30">
+              <div class="text-[11px] text-red-300">Typical Workshop Full Replace Quote</div>
+              <div class="text-lg font-black text-red-400 font-mono line-through mt-0.5">₹${p.dealer_full_replacement_quote_inr.toLocaleString()}</div>
+              <div class="text-[10px] text-slate-400">Part ₹${p.oem_assembly_part_price_inr} + Labor ₹${p.workshop_labor_estimate_inr}</div>
+            </div>
+            <div class="p-3 rounded-lg bg-emerald-950/40 border border-emerald-500/40">
+              <div class="text-[11px] text-emerald-300">AutoFix Part-Level Maintenance</div>
+              <div class="text-lg font-black text-emerald-300 font-mono mt-0.5">₹${p.part_level_maintenance_cost_inr.toLocaleString()}</div>
+              <div class="text-[10px] text-emerald-200">Sub-part service / DIY refurbishment</div>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+              <div class="text-[11px] text-cyan-300">Required Sub-Part / Kit</div>
+              <div class="text-xs font-bold text-white mt-0.5">${p.required_sub_component_or_kit}</div>
+            </div>
+          </div>
+
+          <p class="text-xs text-slate-200 leading-relaxed">${p.owner_advisory_summary}</p>
+
+          <div class="space-y-1.5 pt-1">
+            <div class="text-xs font-bold text-cyan-300">Step-by-Step Part-Level Maintenance Procedure (Avoid Full Replacement):</div>
+            ${(p.step_by_step_part_level_maintenance || []).map(st => `
+              <div class="p-2 rounded bg-slate-950/90 border border-slate-800 text-xs text-slate-200">${st}</div>
+            `).join('')}
+          </div>
+        </div>
+      `;
     }
 
     function renderWorkshopManualsAndRoutings() {

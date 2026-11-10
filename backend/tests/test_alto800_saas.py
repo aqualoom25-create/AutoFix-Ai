@@ -112,3 +112,45 @@ def test_repair_verification_validator():
         rep_data = rep_res.json()
         assert rep_data["verified"] is True
         assert rep_data["verification_report"]["dtcs_cleared"] is True
+
+
+def test_vision_image_warranty_and_part_level_saver():
+    with TestClient(app) as client:
+        # 1. Check all 125 components warranty & part-level cost-saving matrix
+        all_res = client.get("/api/vision/components")
+        assert all_res.status_code == 200
+        all_data = all_res.json()
+        assert all_data["total_components"] == 125
+        assert all_data["total_potential_savings_inr"] > 100000
+
+        # 2. Upload an image of an expired-warranty 2013 factory component (Alternator CMP-040)
+        fake_image = b"\xff\xd8\xff\xe0\x00\x10JFIF" + (b"\x20\x80\xd0" * 500)
+        up_res = client.post(
+            "/api/vision/inspect",
+            files={"file": ("alto800_alternator_photo.jpg", fake_image, "image/jpeg")},
+            data={"component_id": "CMP-040", "odometer_km": "68450"},
+        )
+        assert up_res.status_code == 200
+        up_data = up_res.json()
+        assert up_data["warranty_and_guarantee"]["factory_warranty_expired"] is True
+        assert up_data["durability_and_reliability"]["within_repairable_reliability_limit"] is True
+        plan = up_data["anti_overcosting_part_level_plan"]
+        assert plan["action_directive"] == "DO NOT REPLACE ASSEMBLY — PERFORM PART-LEVEL MAINTENANCE"
+        assert plan["part_level_maintenance_cost_inr"] < plan["dealer_full_replacement_quote_inr"]
+        assert plan["total_rupees_saved_inr"] > 5000
+
+        # 3. Check recently replaced MGP part within guarantee window (3 months / 4000 km)
+        guar_res = client.post(
+            "/api/vision/inspect-json",
+            json={
+                "component_id": "CMP-001",
+                "filename": "map_sensor_new.jpg",
+                "odometer_km": 68450,
+                "part_age_months": 2,
+                "part_km_driven": 3000,
+            },
+        )
+        assert guar_res.status_code == 200
+        guar_data = guar_res.json()
+        assert guar_data["warranty_and_guarantee"]["mgp_part_guarantee_active"] is True
+

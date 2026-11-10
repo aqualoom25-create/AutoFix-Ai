@@ -7,7 +7,7 @@ from app.database import Base, engine, SessionLocal
 from app.models.vehicle import User, Vehicle
 from app.models.diagnostic import DiagnosticSession
 from app.models.repair import RepairRecord
-from app.api import vehicles_router, diagnosis_router, reports_router, hardware_router, manuals_router
+from app.api import vehicles_router, diagnosis_router, reports_router, hardware_router, manuals_router, vision_router
 from app.engine.diagnostic_rules import run_diagnostic_engine
 from app.engine.repair_validator import validate_repair_execution
 from app.engine.master_kb_builder import ensure_master_20k_database
@@ -137,6 +137,7 @@ app.include_router(diagnosis_router)
 app.include_router(reports_router)
 app.include_router(hardware_router)
 app.include_router(manuals_router)
+app.include_router(vision_router)
 
 
 @app.get("/api/health")
