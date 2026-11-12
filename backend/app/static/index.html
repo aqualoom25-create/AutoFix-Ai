@@ -202,33 +202,44 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2 border-t border-slate-800">
           <!-- Left Column: Image Upload + Component & Warranty Inputs -->
-          <div class="space-y-4">
+          <div class="space-y-4 min-w-0">
             <div class="p-4 rounded-xl bg-slate-900/90 border-2 border-dashed border-blue-500/40 text-center space-y-3">
-              <div id="vision-preview-wrap" class="w-full h-40 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center overflow-hidden">
+              <div id="vision-preview-wrap" class="w-full h-44 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center overflow-hidden">
                 <img id="vision-img-preview" src="/api/manuals/image/1.svg" alt="Component Preview" class="w-full h-full object-contain" />
               </div>
-              <label class="block cursor-pointer">
-                <span class="inline-block px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow transition">
-                  📸 Upload Component Photo / Image
-                </span>
-                <input id="vision-file-input" type="file" accept="image/*" onchange="handleImageFileSelect(event)" class="hidden" />
-              </label>
-              <div id="vision-file-label" class="text-[11px] text-slate-400 font-mono">
-                Ready for photo upload (JPEG, PNG, WEBP) or select any component below
+              <div class="flex flex-wrap items-center justify-center gap-2">
+                <label class="cursor-pointer">
+                  <span class="inline-block px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow transition">
+                    📸 Upload Component Photo / Image
+                  </span>
+                  <input id="vision-file-input" type="file" accept="image/*" onchange="handleImageFileSelect(event)" class="hidden" />
+                </label>
+                <button type="button" onclick="reanalyzeUploadedImage()" id="vision-rescan-btn" class="hidden px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/40 text-xs font-bold transition">
+                  🤖 Re-Detect Part
+                </button>
+              </div>
+              <div id="vision-file-label" class="text-[11px] text-slate-400 font-mono break-all">
+                Upload any photo (JPEG, PNG, WEBP) — AI automatically identifies the part & updates status
               </div>
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Select or Confirm 2013 Alto 800 Component (125 Parts)</label>
-              <select id="vision-comp-select" onchange="runVisionInspection()" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white">
-                <!-- Populated dynamically with all 125 components -->
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Detected / Selected Component (125 Parts)</label>
+              <select id="vision-comp-select" onchange="handleManualCompChange()" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white">
+                <!-- Populated dynamically with AUTO + all 125 components -->
               </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">Optional Note / Observed Symptom (Helps Edge Cases)</label>
+              <input id="vision-user-notes" type="text" placeholder="e.g. hard clutch pedal, noise on braking, oil leak..."
+                class="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white" />
             </div>
 
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <label class="block text-[11px] text-slate-400 mb-1">Vehicle Odometer (km)</label>
-                <input id="vision-odo-km" type="number" value="68450" onchange="runVisionInspection()"
+                <input id="vision-odo-km" type="number" value="68450" onchange="runVisionInspection(false, true)"
                   class="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white font-mono" />
               </div>
               <div>
@@ -243,25 +254,46 @@
             <div id="vision-recent-mgp-inputs" class="hidden grid grid-cols-2 gap-3 p-3 rounded-lg bg-blue-950/30 border border-blue-500/30">
               <div>
                 <label class="block text-[11px] text-blue-300 mb-1">Months Since Installed</label>
-                <input id="vision-part-months" type="number" value="3" onchange="runVisionInspection()"
+                <input id="vision-part-months" type="number" value="3" onchange="runVisionInspection(false, true)"
                   class="w-full px-2.5 py-1 rounded bg-slate-900 border border-slate-700 text-xs text-white font-mono" />
               </div>
               <div>
                 <label class="block text-[11px] text-blue-300 mb-1">km Driven on New Part</label>
-                <input id="vision-part-km" type="number" value="4200" onchange="runVisionInspection()"
+                <input id="vision-part-km" type="number" value="4200" onchange="runVisionInspection(false, true)"
                   class="w-full px-2.5 py-1 rounded bg-slate-900 border border-slate-700 text-xs text-white font-mono" />
               </div>
             </div>
 
-            <button onclick="runVisionInspection()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-bold text-xs shadow-lg transition">
+            <button onclick="runVisionInspection(!!uploadedImageFile && document.getElementById('vision-comp-select').value === 'AUTO', true)" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-bold text-xs shadow-lg transition">
               Examine Part Image, Check Warranty & Generate Part-Level Plan
             </button>
           </div>
 
-          <!-- Right 2 Columns: Examination Verdict, Warranty, Durability & Part-Level Maintenance Report -->
-          <div id="vision-report-container" class="lg:col-span-2 space-y-4">
-            <!-- Populated dynamically -->
+          <!-- Right 2 Columns: Live Status + Photo/Blueprint Preview + Warranty, Durability & Part-Level Report -->
+          <div class="lg:col-span-2 space-y-4 min-w-0">
+            <div id="vision-live-status" class="p-3.5 rounded-xl bg-slate-900/90 border border-cyan-500/30 text-xs text-slate-300">
+              Ready — Upload any component image to auto-detect the part and update status, warranty, durability, and part-level savings.
+            </div>
+            <div id="vision-report-container" class="space-y-4 min-w-0">
+              <!-- Populated dynamically -->
+            </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Previous Inspection Results & Visual Previews History -->
+      <div class="glass-card rounded-2xl p-5 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="text-sm font-bold text-cyan-300">Previous Uploaded Image Inspections & Result Previews</h3>
+            <p class="text-[11px] text-slate-400">Every uploaded part image inspection is saved here. Click any previous result to preview and reload its warranty & part-level maintenance report.</p>
+          </div>
+          <button onclick="loadVisionHistory()" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 border border-slate-700">
+            Refresh History
+          </button>
+        </div>
+        <div id="vision-history-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div class="text-xs text-slate-500 col-span-full">No uploaded image inspections logged yet — upload a part photo above to begin.</div>
         </div>
       </div>
 
@@ -679,6 +711,8 @@
     let manualData = null;
     let visionComponentsList = [];
     let uploadedImageFile = null;
+    let uploadedImageDataUrl = null;
+    let visionHistoryCache = [];
     let currentScannerData = null;
     let currentQAResponses = {};
     let current20kPage = 1;
@@ -718,17 +752,29 @@
       await loadRepairReports();
     }
 
+    function escVisionHtml(val) {
+      return String(val ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     function initVisionInspector(visData) {
       if (visData && visData.total_potential_savings_inr) {
         document.getElementById('vision-total-savings-pill').textContent =
           `125 Parts Catalog: Save ₹${visData.total_potential_savings_inr.toLocaleString()} (${visData.average_savings_percent}% Avg Savings vs Full Replacement)`;
       }
       const sel = document.getElementById('vision-comp-select');
-      sel.innerHTML = visionComponentsList.map(c =>
-        `<option value="${c.comp_id}">[${c.comp_id} • ${c.manual_section}] ${c.name} (MGP #${c.mgp_part_number})</option>`
-      ).join('');
+      sel.innerHTML = `<option value="AUTO">🤖 Auto-Detect Component from Uploaded Photo (AI Vision)</option>` +
+        visionComponentsList.map(c =>
+          `<option value="${c.comp_id}">[${c.comp_id} • ${c.manual_section}] ${escVisionHtml(c.name)} (MGP #${c.mgp_part_number})</option>`
+        ).join('');
+      sel.value = 'CMP-001';
       filterVisionTable();
-      runVisionInspection();
+      runVisionInspection(false, false);
+      loadVisionHistory();
     }
 
     function filterVisionTable() {
@@ -745,11 +791,11 @@
       tbody.innerHTML = filtered.map(c => `
         <tr onclick="selectVisionComp('${c.comp_id}')" class="border-b border-slate-800/80 hover:bg-blue-950/40 cursor-pointer transition">
           <td class="py-2 px-2.5 font-mono text-blue-400 font-bold">${c.comp_id}<br/><span class="text-[10px] text-slate-500">${c.manual_section}</span></td>
-          <td class="py-2 px-2.5"><strong class="text-white">${c.name}</strong><br/><span class="text-[11px] font-mono text-cyan-300">MGP #${c.mgp_part_number} • ${c.related_dtc}</span></td>
-          <td class="py-2 px-2.5 text-slate-300 text-[11px]">${c.mgp_guarantee}</td>
+          <td class="py-2 px-2.5"><strong class="text-white">${escVisionHtml(c.name)}</strong><br/><span class="text-[11px] font-mono text-cyan-300">MGP #${c.mgp_part_number} • ${c.related_dtc}</span></td>
+          <td class="py-2 px-2.5 text-slate-300 text-[11px]">${escVisionHtml(c.mgp_guarantee)}</td>
           <td class="py-2 px-2.5 font-mono text-emerald-300">${c.design_durability_km.toLocaleString()} km<br/><span class="text-[10px] text-slate-400">${c.core_reliability_remaining_percent}% Core Left</span></td>
           <td class="py-2 px-2.5 font-mono text-red-300 line-through">₹${c.dealer_full_replacement_inr.toLocaleString()}</td>
-          <td class="py-2 px-2.5 font-mono text-emerald-300 font-bold">₹${c.part_level_maintenance_inr.toLocaleString()}<br/><span class="text-[10px] font-sans text-slate-400">${c.part_level_subcomponent.slice(0, 36)}...</span></td>
+          <td class="py-2 px-2.5 font-mono text-emerald-300 font-bold">₹${c.part_level_maintenance_inr.toLocaleString()}<br/><span class="text-[10px] font-sans text-slate-400">${escVisionHtml(c.part_level_subcomponent.slice(0, 36))}...</span></td>
           <td class="py-2 px-2.5 font-mono font-bold text-amber-300">Save ₹${c.rupees_saved_inr.toLocaleString()} (${c.savings_percent}%)</td>
         </tr>
       `).join('');
@@ -757,60 +803,224 @@
 
     function selectVisionComp(compId) {
       document.getElementById('vision-comp-select').value = compId;
-      const compIdx = parseInt(compId.split('-')[1], 10) || 1;
-      const blueprintIssueId = ((compIdx - 1) * 160) + 1;
-      if (!uploadedImageFile) {
-        document.getElementById('vision-img-preview').src = `/api/manuals/image/${blueprintIssueId}.svg`;
-      }
-      runVisionInspection();
+      handleManualCompChange();
+      document.getElementById('vision-live-status').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     function toggleFitmentMode() {
       const mode = document.getElementById('vision-fitment-mode').value;
       document.getElementById('vision-recent-mgp-inputs').classList.toggle('hidden', mode !== 'recent_mgp');
-      runVisionInspection();
+      runVisionInspection(false, !!uploadedImageFile);
     }
 
     function handleImageFileSelect(event) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
       uploadedImageFile = file;
+      document.getElementById('vision-rescan-btn').classList.remove('hidden');
       document.getElementById('vision-file-label').textContent = `Uploaded: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+
+      const statusEl = document.getElementById('vision-live-status');
+      statusEl.className = 'p-3.5 rounded-xl bg-blue-950/50 border border-blue-400/50 text-xs text-blue-200 animate-pulse';
+      statusEl.innerHTML = `⏳ <strong>Examining uploaded image pixels (${escVisionHtml(file.name)})...</strong> Checking 2013 Alto 800 service manuals, warranty &amp; part-level savings...`;
+
       const reader = new FileReader();
       reader.onload = function(e) {
-        document.getElementById('vision-img-preview').src = e.target.result;
+        uploadedImageDataUrl = e.target.result;
+        document.getElementById('vision-img-preview').src = uploadedImageDataUrl;
       };
       reader.readAsDataURL(file);
-      runVisionInspection();
+
+      // Reset file input so uploading the same image again still triggers onchange
+      event.target.value = '';
+      // Always force AUTO AI detection on new photo upload so stale dropdown doesn't block status update
+      runVisionInspection(true, true);
     }
 
-    async function runVisionInspection() {
-      const compId = document.getElementById('vision-comp-select').value || 'CMP-001';
-      const odoKm = parseInt(document.getElementById('vision-odo-km').value, 10) || 68450;
-      const fitMode = document.getElementById('vision-fitment-mode').value;
+    function reanalyzeUploadedImage() {
+      if (!uploadedImageFile) return;
+      runVisionInspection(true, true);
+    }
 
-      const formData = new FormData();
-      if (uploadedImageFile) {
-        formData.append('file', uploadedImageFile);
-      } else {
+    function handleManualCompChange() {
+      const compId = document.getElementById('vision-comp-select').value;
+      if (compId === 'AUTO') {
+        if (uploadedImageFile) {
+          runVisionInspection(true, true);
+        }
+        return;
+      }
+      if (!uploadedImageFile) {
+        uploadedImageDataUrl = null;
         const compIdx = parseInt(compId.split('-')[1], 10) || 1;
         const blueprintIssueId = ((compIdx - 1) * 160) + 1;
         document.getElementById('vision-img-preview').src = `/api/manuals/image/${blueprintIssueId}.svg`;
       }
-      formData.append('component_id', compId);
+      runVisionInspection(false, !!uploadedImageFile);
+    }
+
+    function applyDetectedCandidate(compId) {
+      document.getElementById('vision-comp-select').value = compId;
+      runVisionInspection(false, true);
+    }
+
+    async function runVisionInspection(forceAutoDetect = false, recordHistory = true) {
+      const selEl = document.getElementById('vision-comp-select');
+      const requestedCompId = forceAutoDetect ? 'AUTO' : (selEl.value || 'CMP-001');
+      const odoKm = parseInt(document.getElementById('vision-odo-km').value, 10) || 68450;
+      const fitMode = document.getElementById('vision-fitment-mode').value;
+      const userNotes = (document.getElementById('vision-user-notes')?.value || '').trim();
+      const statusEl = document.getElementById('vision-live-status');
+
+      if (uploadedImageFile && requestedCompId === 'AUTO') {
+        statusEl.className = 'p-3.5 rounded-xl bg-blue-950/50 border border-blue-400/50 text-xs text-blue-200';
+        statusEl.innerHTML = `⏳ <strong>Analyzing image pixels (${escVisionHtml(uploadedImageFile.name)})...</strong> Matching part geometry &amp; retrieving manual rules...`;
+      }
+
+      const formData = new FormData();
+      if (uploadedImageFile) {
+        formData.append('file', uploadedImageFile);
+      } else if (requestedCompId !== 'AUTO') {
+        const compIdx = parseInt(requestedCompId.split('-')[1], 10) || 1;
+        const blueprintIssueId = ((compIdx - 1) * 160) + 1;
+        document.getElementById('vision-img-preview').src = `/api/manuals/image/${blueprintIssueId}.svg`;
+      }
+      formData.append('component_id', requestedCompId);
       formData.append('odometer_km', odoKm);
+      formData.append('user_notes', userNotes);
+      formData.append('record_history', recordHistory ? 'true' : 'false');
 
       if (fitMode === 'recent_mgp') {
         formData.append('part_age_months', parseInt(document.getElementById('vision-part-months').value, 10) || 3);
         formData.append('part_km_driven', parseInt(document.getElementById('vision-part-km').value, 10) || 4200);
       }
 
-      const res = await fetch('/api/vision/inspect', {
-        method: 'POST',
-        body: formData
-      });
-      const data = await res.json();
-      renderVisionReport(data);
+      try {
+        const res = await fetch('/api/vision/inspect', {
+          method: 'POST',
+          body: formData
+        });
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        const data = await res.json();
+
+        if (data.component && data.component.comp_id) {
+          selEl.value = data.component.comp_id;
+        }
+
+        updateVisionStatusBanner(data, false);
+        renderVisionReport(data);
+
+        if (recordHistory) {
+          await loadVisionHistory();
+        }
+      } catch (err) {
+        console.error('Vision inspection error:', err);
+        statusEl.className = 'p-3.5 rounded-xl bg-red-950/50 border border-red-500/50 text-xs text-red-200';
+        statusEl.textContent = `❌ Failed to analyze image (${err.message}). Please retry or select a component manually.`;
+      }
+    }
+
+    function updateVisionStatusBanner(data, isRestoredFromHistory = false) {
+      const statusEl = document.getElementById('vision-live-status');
+      const c = data.component || {};
+      const ai = data.ai_detection || {};
+      const w = data.warranty_and_guarantee || {};
+      const v = data.visual_examination || {};
+      const candidates = ai.candidates || [];
+
+      const chipHtml = candidates.map(cand => {
+        const active = cand.comp_id === c.comp_id;
+        return `<button type="button" onclick="applyDetectedCandidate('${escVisionHtml(cand.comp_id)}')" class="px-2 py-0.5 rounded-md border text-[11px] font-mono transition ${active ? 'bg-cyan-500/25 border-cyan-400 text-cyan-200 font-bold' : 'bg-slate-950/80 border-slate-700 text-slate-300 hover:border-cyan-500/50'}">${escVisionHtml(cand.comp_id)} • ${escVisionHtml(cand.name)} (${cand.confidence_percent}%)</button>`;
+      }).join('');
+
+      const headerLabel = isRestoredFromHistory
+        ? 'PREVIEWING SAVED INSPECTION RESULT'
+        : (ai.auto_detected ? `AUTO-DETECTED BY AI VISION (${ai.confidence_percent}% CONFIDENCE)` : 'COMPONENT CONFIRMED & STATUS UPDATED');
+
+      statusEl.className = 'p-3.5 rounded-xl bg-emerald-950/35 border border-emerald-500/50 text-xs text-slate-200 space-y-2 min-w-0';
+      statusEl.innerHTML = `
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="font-bold text-emerald-300 break-words">
+            ✅ ${headerLabel}: <span class="text-white">${escVisionHtml(c.comp_id)} — ${escVisionHtml(c.name)}</span>
+          </div>
+          <span class="px-2 py-0.5 rounded-full bg-slate-900 border border-slate-700 font-mono text-[10px] text-cyan-300">
+            MGP #${escVisionHtml(c.mgp_part_number)} • ${escVisionHtml(c.manual_section)} • ${escVisionHtml(v.image_fingerprint || '')}
+          </span>
+        </div>
+        <div class="text-[11px] text-slate-300 leading-relaxed break-words">
+          <strong>Status:</strong> ${escVisionHtml(w.status_badge)} |
+          <strong>Method:</strong> ${escVisionHtml(ai.detection_method || 'Direct Selection')} — ${escVisionHtml(ai.detection_reasoning || '')}
+        </div>
+        ${chipHtml ? `<div class="flex flex-wrap items-center gap-1.5 pt-0.5"><span class="text-[10px] text-slate-400 mr-1">Top Visual Matches (click to switch):</span>${chipHtml}</div>` : ''}
+      `;
+    }
+
+    async function loadVisionHistory() {
+      const container = document.getElementById('vision-history-list');
+      if (!container) return;
+      try {
+        const res = await fetch('/api/vision/history?limit=12');
+        if (!res.ok) return;
+        const payload = await res.json();
+        visionHistoryCache = payload.history || [];
+        renderVisionHistory(visionHistoryCache);
+      } catch (err) {
+        console.error('Failed loading vision history:', err);
+      }
+    }
+
+    function renderVisionHistory(items) {
+      const container = document.getElementById('vision-history-list');
+      if (!items || items.length === 0) {
+        container.innerHTML = `<div class="text-xs text-slate-500 col-span-full">No uploaded image inspections logged yet — upload a part photo above to begin.</div>`;
+        return;
+      }
+      container.innerHTML = items.map((item, idx) => {
+        const compNum = (parseInt((item.comp_id || 'CMP-001').split('-')[1], 10) || 1);
+        const fallbackBlueprint = `/api/manuals/image/${((compNum - 1) * 160) + 1}.svg`;
+        const thumbSrc = item.thumbnail_data_url || fallbackBlueprint;
+        return `
+          <button type="button" onclick="restorePreviousInspection(${idx})" class="text-left p-3 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 hover:border-cyan-500/50 transition flex gap-3 items-start min-w-0">
+            <div class="w-16 h-16 rounded-lg bg-slate-950 border border-slate-800 flex-shrink-0 overflow-hidden flex items-center justify-center">
+              <img src="${escVisionHtml(thumbSrc)}" alt="Inspection Thumbnail" class="w-full h-full object-contain" />
+            </div>
+            <div class="min-w-0 flex-1 space-y-1">
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[11px] font-mono font-bold text-cyan-300 truncate">${escVisionHtml(item.comp_id)} • ${escVisionHtml(item.manual_section)}</span>
+                <span class="text-[10px] font-mono text-emerald-300 font-bold flex-shrink-0">Save ₹${Number(item.savings_inr || 0).toLocaleString()}</span>
+              </div>
+              <div class="text-xs font-bold text-white truncate">${escVisionHtml(item.component_name)}</div>
+              <div class="text-[10px] text-slate-400 truncate">File: ${escVisionHtml(item.filename)} • ${item.durability_remaining_pct}% Core Left</div>
+              <div class="text-[10px] text-amber-300 truncate">${escVisionHtml(item.warranty_status)}</div>
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function restorePreviousInspection(idx) {
+      const item = visionHistoryCache[idx];
+      if (!item || !item.full_report) return;
+      const report = item.full_report;
+      const c = report.component || {};
+      const selEl = document.getElementById('vision-comp-select');
+      if (c.comp_id && selEl) {
+        selEl.value = c.comp_id;
+      }
+      uploadedImageFile = null;
+      document.getElementById('vision-rescan-btn').classList.add('hidden');
+      uploadedImageDataUrl = item.thumbnail_data_url || (report.visual_examination && report.visual_examination.thumbnail_data_url) || null;
+      if (uploadedImageDataUrl) {
+        document.getElementById('vision-img-preview').src = uploadedImageDataUrl;
+      } else if (c.blueprint_url) {
+        document.getElementById('vision-img-preview').src = c.blueprint_url;
+      }
+      document.getElementById('vision-file-label').textContent = `Restored Preview: ${item.filename} (${item.created_at})`;
+      updateVisionStatusBanner(report, true);
+      renderVisionReport(report);
+      document.getElementById('vision-live-status').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     function renderVisionReport(data) {
@@ -819,31 +1029,67 @@
       const d = data.durability_and_reliability;
       const p = data.anti_overcosting_part_level_plan;
       const v = data.visual_examination;
+      const ai = data.ai_detection || {};
+
+      const activePhotoSrc = uploadedImageDataUrl || v.thumbnail_data_url || c.blueprint_url;
+      const hasPhotoPreview = !!(uploadedImageDataUrl || v.thumbnail_data_url);
 
       const container = document.getElementById('vision-report-container');
       container.innerHTML = `
+        <!-- 0. Visual Inspection Photo vs Engineering Blueprint Preview -->
+        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3 min-w-0">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-cyan-300">
+              0. Visual Examination &amp; Blueprint Comparison (${escVisionHtml(c.comp_id)})
+            </span>
+            <button type="button" onclick="openIssueModal(${Number(c.blueprint_issue_id || 1)})" class="px-2.5 py-1 rounded-lg bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 text-[11px] font-bold transition">
+              Open Full Service Manual Diagram &amp; Routing (#${Number(c.blueprint_issue_id || 1)})
+            </button>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">
+            <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 space-y-1.5 min-w-0">
+              <div class="text-slate-400 font-semibold">${hasPhotoPreview ? 'Uploaded Part Image Preview' : 'Component Reference Preview'}</div>
+              <div class="w-full h-32 rounded bg-slate-900 border border-slate-800 overflow-hidden flex items-center justify-center">
+                <img src="${escVisionHtml(activePhotoSrc)}" alt="Inspected Part Preview" class="w-full h-full object-contain" />
+              </div>
+              <div class="font-mono text-slate-300 break-words">
+                ${escVisionHtml(v.filename)} • ${escVisionHtml(v.resolution || 'N/A')} • ${escVisionHtml(v.image_format || 'IMG')}
+              </div>
+              <div class="text-cyan-300 break-words">${escVisionHtml(v.visual_surface_finding)} (Wear Index: ${v.estimated_surface_wear_percent}%)</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 space-y-1.5 min-w-0">
+              <div class="text-slate-400 font-semibold">2013 Alto 800 Workshop Blueprint (${escVisionHtml(c.manual_section)})</div>
+              <div class="w-full h-32 rounded bg-slate-900 border border-slate-800 overflow-hidden flex items-center justify-center cursor-pointer" onclick="openIssueModal(${Number(c.blueprint_issue_id || 1)})">
+                <img src="${escVisionHtml(c.blueprint_url)}" alt="Manual Blueprint" class="w-full h-full object-contain" />
+              </div>
+              <div class="font-mono text-slate-300 break-words">Pin/Conn: ${escVisionHtml(c.connector_pin)} • Wire: ${escVisionHtml(c.wire_color)}</div>
+              <div class="text-emerald-300 break-words">Torque: ${c.fastener_torque_nm} Nm • OEM Spec: ${escVisionHtml(c.oem_expected_spec)}</div>
+            </div>
+          </div>
+        </div>
+
         <!-- 1. Warranty & Guarantee Card -->
-        <div class="p-4 rounded-xl border ${w.mgp_part_guarantee_active ? 'bg-emerald-950/30 border-emerald-500/50' : 'bg-amber-950/25 border-amber-500/40'} space-y-2">
+        <div class="p-4 rounded-xl border min-w-0 ${w.mgp_part_guarantee_active ? 'bg-emerald-950/30 border-emerald-500/50' : 'bg-amber-950/25 border-amber-500/40'} space-y-2">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <span class="text-xs font-bold uppercase tracking-wider ${w.mgp_part_guarantee_active ? 'text-emerald-300' : 'text-amber-300'}">
-              1. Manual Warranty & Guarantee Verification (${c.manual_section})
+              1. Manual Warranty &amp; Guarantee Verification (${escVisionHtml(c.manual_section)})
             </span>
             <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${w.mgp_part_guarantee_active ? 'bg-emerald-500/20 text-emerald-200 border border-emerald-500/40' : 'bg-amber-500/20 text-amber-200 border border-amber-500/40'}">
-              ${w.status_badge}
+              ${escVisionHtml(w.status_badge)}
             </span>
           </div>
-          <p class="text-xs text-slate-200 leading-relaxed">${w.detailed_verdict}</p>
+          <p class="text-xs text-slate-200 leading-relaxed break-words">${escVisionHtml(w.detailed_verdict)}</p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-[11px] text-slate-300">
-            <div class="p-2 rounded bg-slate-950/80 border border-slate-800"><strong>Factory Policy:</strong> ${w.factory_vehicle_warranty_policy}</div>
-            <div class="p-2 rounded bg-slate-950/80 border border-slate-800"><strong>MGP Spare Guarantee:</strong> ${w.mgp_spare_part_guarantee_policy}</div>
+            <div class="p-2 rounded bg-slate-950/80 border border-slate-800 min-w-0 break-words"><strong>Factory Policy:</strong> ${escVisionHtml(w.factory_vehicle_warranty_policy)}</div>
+            <div class="p-2 rounded bg-slate-950/80 border border-slate-800 min-w-0 break-words"><strong>MGP Spare Guarantee:</strong> ${escVisionHtml(w.mgp_spare_part_guarantee_policy)}</div>
           </div>
         </div>
 
         <!-- 2. Durability & Reliability Limit Card -->
-        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2.5">
+        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2.5 min-w-0">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <span class="text-xs font-bold uppercase tracking-wider text-cyan-400">
-              2. Component Durability & Reliability Limit Check
+              2. Component Durability &amp; Reliability Limit Check
             </span>
             <span class="text-xs font-mono font-bold text-emerald-300">
               Core Reliability Remaining: ${d.core_reliability_remaining_percent}% (~${d.estimated_remaining_life_km_after_maintenance.toLocaleString()} km left)
@@ -853,26 +1099,26 @@
             <div class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400" style="width: ${d.core_reliability_remaining_percent}%"></div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
-            <div class="p-2 rounded bg-slate-950 border border-slate-800">
+            <div class="p-2 rounded bg-slate-950 border border-slate-800 min-w-0 break-words">
               <div class="text-slate-400">Design Durability Limit</div>
               <div class="font-bold text-white font-mono">${d.design_durability_limit_km.toLocaleString()} km / ${d.design_durability_limit_years} Yrs</div>
             </div>
-            <div class="p-2 rounded bg-slate-950 border border-slate-800">
-              <div class="text-slate-400">MTBF Rating & Visual Scan</div>
-              <div class="font-bold text-cyan-300 font-mono">${d.mtbf_hours.toLocaleString()} hrs • ${v.image_fingerprint}</div>
+            <div class="p-2 rounded bg-slate-950 border border-slate-800 min-w-0 break-words">
+              <div class="text-slate-400">MTBF Rating &amp; Visual Scan</div>
+              <div class="font-bold text-cyan-300 font-mono">${d.mtbf_hours.toLocaleString()} hrs • ${escVisionHtml(v.image_fingerprint)}</div>
             </div>
-            <div class="p-2 rounded bg-slate-950 border border-slate-800">
+            <div class="p-2 rounded bg-slate-950 border border-slate-800 min-w-0 break-words">
               <div class="text-slate-400">Manual Service Wear Limit</div>
-              <div class="font-bold text-amber-300">${d.manual_reliability_wear_limit}</div>
+              <div class="font-bold text-amber-300">${escVisionHtml(d.manual_reliability_wear_limit)}</div>
             </div>
           </div>
         </div>
 
         <!-- 3. Anti-Overcosting Part-Level Maintenance Recommendation -->
-        <div class="p-4 rounded-xl bg-blue-950/30 border border-blue-500/40 space-y-3">
+        <div class="p-4 rounded-xl bg-blue-950/30 border border-blue-500/40 space-y-3 min-w-0">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <span class="text-xs font-extrabold uppercase tracking-wider text-amber-300">
-              🛡️ 3. ${p.action_directive}
+              🛡️ 3. ${escVisionHtml(p.action_directive)}
             </span>
             <span class="px-3 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono text-xs font-black">
               YOU SAVE ₹${p.total_rupees_saved_inr.toLocaleString()} (${p.cost_savings_percent}% SAVED)
@@ -880,28 +1126,28 @@
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div class="p-3 rounded-lg bg-red-950/40 border border-red-500/30">
+            <div class="p-3 rounded-lg bg-red-950/40 border border-red-500/30 min-w-0">
               <div class="text-[11px] text-red-300">Typical Workshop Full Replace Quote</div>
               <div class="text-lg font-black text-red-400 font-mono line-through mt-0.5">₹${p.dealer_full_replacement_quote_inr.toLocaleString()}</div>
               <div class="text-[10px] text-slate-400">Part ₹${p.oem_assembly_part_price_inr} + Labor ₹${p.workshop_labor_estimate_inr}</div>
             </div>
-            <div class="p-3 rounded-lg bg-emerald-950/40 border border-emerald-500/40">
+            <div class="p-3 rounded-lg bg-emerald-950/40 border border-emerald-500/40 min-w-0">
               <div class="text-[11px] text-emerald-300">AutoFix Part-Level Maintenance</div>
               <div class="text-lg font-black text-emerald-300 font-mono mt-0.5">₹${p.part_level_maintenance_cost_inr.toLocaleString()}</div>
               <div class="text-[10px] text-emerald-200">Sub-part service / DIY refurbishment</div>
             </div>
-            <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+            <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 min-w-0 break-words">
               <div class="text-[11px] text-cyan-300">Required Sub-Part / Kit</div>
-              <div class="text-xs font-bold text-white mt-0.5">${p.required_sub_component_or_kit}</div>
+              <div class="text-xs font-bold text-white mt-0.5">${escVisionHtml(p.required_sub_component_or_kit)}</div>
             </div>
           </div>
 
-          <p class="text-xs text-slate-200 leading-relaxed">${p.owner_advisory_summary}</p>
+          <p class="text-xs text-slate-200 leading-relaxed break-words">${escVisionHtml(p.owner_advisory_summary)}</p>
 
           <div class="space-y-1.5 pt-1">
             <div class="text-xs font-bold text-cyan-300">Step-by-Step Part-Level Maintenance Procedure (Avoid Full Replacement):</div>
             ${(p.step_by_step_part_level_maintenance || []).map(st => `
-              <div class="p-2 rounded bg-slate-950/90 border border-slate-800 text-xs text-slate-200">${st}</div>
+              <div class="p-2 rounded bg-slate-950/90 border border-slate-800 text-xs text-slate-200 break-words">${escVisionHtml(st)}</div>
             `).join('')}
           </div>
         </div>

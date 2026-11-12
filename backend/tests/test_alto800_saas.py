@@ -1,3 +1,7 @@
+import io
+import cv2
+import numpy as np
+from PIL import Image
 from fastapi.testclient import TestClient
 from app.main import app
 
@@ -153,4 +157,47 @@ def test_vision_image_warranty_and_part_level_saver():
         assert guar_res.status_code == 200
         guar_data = guar_res.json()
         assert guar_data["warranty_and_guarantee"]["mgp_part_guarantee_active"] is True
+
+        # 4. Auto-detect a studio twin-disc clutch photo uploaded with a random hex filename (.webp)
+        canvas = np.full((320, 480, 3), 242, dtype=np.uint8)
+        # Left clutch pressure plate (metallic ring + diaphragm fingers + inner bore)
+        cv2.circle(canvas, (145, 160), 92, (150, 155, 162), -1)
+        cv2.circle(canvas, (145, 160), 86, (195, 200, 208), 8)
+        cv2.circle(canvas, (145, 160), 48, (70, 75, 82), -1)
+        cv2.circle(canvas, (145, 160), 18, (235, 235, 235), -1)
+        # Right friction disc (darker lining ring + hub springs)
+        cv2.circle(canvas, (355, 160), 70, (68, 70, 74), -1)
+        cv2.circle(canvas, (355, 160), 42, (130, 134, 140), -1)
+        cv2.circle(canvas, (355, 160), 15, (45, 45, 48), -1)
+        buf = io.BytesIO()
+        Image.fromarray(cv2.cvtColor(canvas, cv2.COLOR_BGR2RGB)).save(buf, format="WEBP")
+
+        auto_res = client.post(
+            "/api/vision/inspect",
+            files={
+                "file": (
+                    "08f32b83096e76075cd5fd386970355e.webp",
+                    buf.getvalue(),
+                    "image/webp",
+                )
+            },
+            data={"component_id": "AUTO", "odometer_km": "68450", "record_history": "true"},
+        )
+        assert auto_res.status_code == 200
+        auto_data = auto_res.json()
+        assert auto_data["status_updated"] is True
+        assert auto_data["ai_detection"]["auto_detected"] is True
+        assert auto_data["component"]["comp_id"] == "CMP-086"
+        assert auto_data["visual_examination"]["thumbnail_data_url"].startswith("data:image/jpeg;base64,")
+
+        # 5. Verify previous uploaded image inspection is saved & retrievable for previewing
+        hist_res = client.get("/api/vision/history?limit=10")
+        assert hist_res.status_code == 200
+        hist_data = hist_res.json()
+        assert hist_data["total_returned"] >= 1
+        latest = hist_data["history"][0]
+        assert latest["comp_id"] == "CMP-086"
+        assert latest["filename"] == "08f32b83096e76075cd5fd386970355e.webp"
+        assert latest["thumbnail_data_url"].startswith("data:image/jpeg;base64,")
+        assert latest["full_report"]["component"]["comp_id"] == "CMP-086"
 
